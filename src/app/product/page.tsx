@@ -174,7 +174,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Price */}
-              <div className="flex items-baseline gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-4">
                 <span className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                   $5,999.00
                 </span>
@@ -239,7 +239,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Button
                   size="lg"
                   className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
@@ -331,8 +331,8 @@ export default function ProductDetail() {
             <div className="bg-gradient-to-br from-white to-orange-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-orange-200/50 to-yellow-200/50 p-6">
               <ul className="space-y-3">
                 {features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1 rounded-full text-white flex-shrink-0 mt-1">
+                  <li key={index} className="flex items-center gap-3">
+                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1 rounded-full text-white flex-shrink-0 ">
                       <Check className="w-4 h-4" />
                     </div>
                     <span className="text-gray-700">{feature}</span>
@@ -345,20 +345,28 @@ export default function ProductDetail() {
           <div>
             <h2 className="text-2xl font-bold text-black mb-6">Care Instructions</h2>
             <div className="bg-gradient-to-br from-white to-yellow-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-yellow-200/50 to-amber-200/50 p-6">
-              <div className="flex items-start gap-3 mb-4">
-                <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
+              <div className="flex items-center gap-3 mb-4">
+                {/* <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
                   <Info className="w-4 h-4" />
-                </div>
+                </div> */}
                 <p className="text-gray-700">
                   To keep your diamond ring looking its best, follow these simple care instructions:
                 </p>
               </div>
-              <ul className="space-y-3 text-gray-700 pl-10 list-disc">
-                <li>Clean regularly with mild soap and warm water</li>
-                <li>Avoid contact with harsh chemicals and cleaning agents</li>
-                <li>Remove before swimming, exercising, or household chores</li>
-                <li>Store separately to prevent scratching</li>
-                <li>Have professional cleaning twice a year</li>
+              <ul className="space-y-3 text-gray-700 list-disc">
+                {
+                  ["Clean regularly with mild soap and warm water",
+                    "Avoid contact with harsh chemicals and cleaning agents",
+                    "Remove before swimming, exercising, or household chores",
+                    "Store separately to prevent scratching",
+                    "Have professional cleaning twice a year"].map((ele) => {
+                      return <li className="flex items-center gap-4">
+                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
+                        </div>
+                        <span>{ele}</span>
+                      </li>
+                    })
+                }
               </ul>
             </div>
           </div>
