@@ -24,7 +24,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-3 md:py-5">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <a href="/" className="flex items-center space-x-3">
             <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-3 rounded-full shadow-lg">
               <Sparkles className="h-3 w-3 sm:w-6 sm:h-6 text-white" />
             </div>
@@ -37,7 +37,7 @@ export default function Navbar() {
               </div>
               <p className="text-xs text-gray-600">Fine Jewelry Collection</p>
             </div>
-          </div>
+          </a>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">

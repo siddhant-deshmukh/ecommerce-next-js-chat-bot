@@ -1,21 +1,23 @@
 "use client";
 
-import { KeyboardEvent, useState } from "react"
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react"
 import { Send, Settings, Shield, Sparkles } from "lucide-react"
+import { post } from "@/lib/apiCallClient";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CustomizationRequest() {
   const [messages, setMessages] = useState([
     {
       id: 1,
       text: "Welcome to our customization service! I'm here to help you create your perfect ring. What would you like to customize?",
-      sender: "agent",
+      sender: "assistant",
       timestamp: "2:30 PM",
       type: "welcome",
     },
     {
       id: 2,
       text: "Here are some popular customization options:",
-      sender: "agent",
+      sender: "assistant",
       timestamp: "2:30 PM",
       type: "options",
       options: [
@@ -26,101 +28,74 @@ export default function CustomizationRequest() {
         "Change band width",
       ],
     },
-  ])
+  ]);
+  const [msgLoading, setMsgLoading] = useState(false);
+  const chatIdRef = useRef<string>(null);
+  const scrollRef = useRef<HTMLDivElement>(null)
   const [inputMessage, setInputMessage] = useState("")
 
-  const sendMessage = () => {
-    if (inputMessage.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        text: inputMessage,
-        sender: "user",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        type: "message",
-      }
-      setMessages([...messages, newMessage])
-      setInputMessage("")
-
-      // Simulate agent response based on user input
-      setTimeout(() => {
-        let agentResponse = ""
-        const userInput = inputMessage.toLowerCase()
-
-        if (userInput.includes("metal") || userInput.includes("gold") || userInput.includes("platinum")) {
-          agentResponse =
-            "Great choice! We offer 18K Rose Gold, Yellow Gold, and Platinum options. Rose Gold adds warmth, Yellow Gold is classic, and Platinum is the most durable. Which would you prefer? The price difference is typically $200-500."
-        } else if (userInput.includes("diamond") || userInput.includes("carat") || userInput.includes("size")) {
-          agentResponse =
-            "We can customize the diamond size from 0.5ct to 3ct. Larger diamonds will increase the price significantly. We also offer different cuts: Round, Princess, Emerald, or Oval. What size and cut interests you?"
-        } else if (userInput.includes("engrav")) {
-          agentResponse =
-            "Engraving is a beautiful personal touch! We can engrave up to 20 characters inside the band. Popular options include dates, initials, or short messages like 'Forever Yours'. Engraving adds $75 to the total cost."
-        } else if (userInput.includes("setting") || userInput.includes("style")) {
-          agentResponse =
-            "We offer several setting styles: Classic Prong (current), Bezel (modern & secure), Halo (makes diamond appear larger), or Vintage-inspired. Each style has different pricing. Which style appeals to you?"
-        } else {
-          agentResponse =
-            "Thank you for your customization request! Our design team will review your specifications and provide a detailed quote within 24 hours. We'll also create a 3D rendering for your approval before crafting begins."
-        }
-
-        const response = {
-          id: messages.length + 2,
-          text: agentResponse,
-          sender: "agent",
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          type: "response",
-        }
-        setMessages((prev) => [...prev, response])
-      }, 1500)
-    }
-  }
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      sendMessage()
-    }
-  }
-
-  const handleOptionClick = (option) => {
+  const sendMessage = useCallback((message: string) => {
     const newMessage = {
       id: messages.length + 1,
-      text: option,
+      text: message,
       sender: "user",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       type: "message",
     }
     setMessages([...messages, newMessage])
+    setInputMessage("")
 
-    // Simulate agent response for option selection
-    setTimeout(() => {
-      let agentResponse = ""
-      if (option.includes("metal")) {
-        agentResponse =
-          "Excellent! Metal type changes can really transform the look. Rose Gold gives a romantic feel, Yellow Gold is timeless, and Platinum is the most premium. The price difference ranges from $200-500. Which metal speaks to you?"
-      } else if (option.includes("diamond")) {
-        agentResponse =
-          "Diamond customization is our specialty! We can adjust size (0.5ct-3ct), cut (Round, Princess, Emerald, Oval), color grade (D-J), and clarity (FL-SI2). What's most important to you - size, quality, or budget?"
-      } else if (option.includes("setting")) {
-        agentResponse =
-          "Setting style dramatically changes the ring's personality! Classic Prong showcases the diamond, Bezel is modern and secure, Halo makes the center stone appear larger, and Vintage adds character. Which style matches your vision?"
-      } else if (option.includes("engraving")) {
-        agentResponse =
-          "Engraving adds such a personal touch! We can engrave inside the band with dates, names, coordinates, or meaningful phrases (up to 20 characters). Font options include Script, Block, or Custom. What would you like engraved?"
-      } else if (option.includes("band")) {
-        agentResponse =
-          "Band width affects both comfort and appearance! We offer 1.8mm (delicate), 2.3mm (standard), 2.8mm (substantial), or 3.5mm (bold). Wider bands cost slightly more but create a different aesthetic. What width feels right?"
+    setMsgLoading(true);
+    post('/api/customisation-chat', {
+      chatId: chatIdRef.current,
+      product: {
+        "name": "Radiant Solitaire Diamond Ring",
+        "desc": "18K White Gold | 1.5 Carat Diamond",
+        "tagline": "Elevate your special moments with our exquisite Radiant Solitaire Diamond Ring. This stunning piece features a brilliant 1.5 carat diamond set in luxurious 18K white gold, creating a timeless symbol of elegance and love."
+      },
+      messages: messages.slice(2, -1).map(ele => { return { role: ele.sender, content: ele.text } }),
+      newMessage: newMessage.text
+    }).then((res) => {
+      if (res && res.chatId) {
+        chatIdRef.current = res.chatId;
+        const response = {
+          id: messages.length + 2,
+          text: res.mainReply,
+          sender: "assistant",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          type: "response",
+          options: res.suggestedInputs ? res.suggestedInputs : [],
+        }
+        setMessages((prev) => [...prev, response]);
       }
+    }).catch((err) => {
+      if(err && err.data) {
+        const response = {
+          id: messages.length + 2,
+          text: err.data.msg,
+          sender: "assistant",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          type: "error",
+        }
+        setMessages((prev) => [...prev, response]);
+      }
+    }).finally(() => {
+      setMsgLoading(false);
+    })
 
-      const response = {
-        id: messages.length + 2,
-        text: agentResponse,
-        sender: "agent",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        type: "response",
-      }
-      setMessages((prev) => [...prev, response])
-    }, 1000)
-  }
+  }, [messages, inputMessage]);
+
+  const handleKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      sendMessage(inputMessage);
+    }
+  }, [inputMessage])
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <div className="mt-16">
@@ -154,20 +129,22 @@ export default function CustomizationRequest() {
           </div>
         </div>
 
-        {/* Messages Area */}
-        <div className="h-96 p-6 overflow-y-auto space-y-4 bg-gradient-to-b from-white to-amber-50/30">
+        <div ref={scrollRef} className="h-96 p-6 overflow-y-auto space-y-4 bg-gradient-to-b from-white to-amber-50/30 chat-scroll-area">
           {messages.map((message) => (
             <div key={message.id}>
               <div className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[80%] p-4 rounded-2xl ${
+                  className={`max-w-[80%] p-4 rounded-2xl ${message.type == 'error' ? `bg-red-100 text-red-950`:(
                     message.sender === "user"
-                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
-                      : "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200"
-                  }`}
+                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                    : "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200"
+                  )}`}
                 >
                   <p className="text-sm leading-relaxed">{message.text}</p>
-                  <p className={`text-xs mt-2 ${message.sender === "user" ? "text-white/80" : "text-gray-500"}`}>
+                  <p className={`text-xs mt-2 ${
+                    message.type == 'error' ? 'text-red-800' : (
+                      message.sender === "user" ? "text-white/80" : "text-gray-500"
+                    )}`}>
                     {message.timestamp}
                   </p>
                 </div>
@@ -179,7 +156,7 @@ export default function CustomizationRequest() {
                   {message.options.map((option, index) => (
                     <button
                       key={index}
-                      onClick={() => handleOptionClick(option)}
+                      onClick={() => sendMessage(option)}
                       className="block text-left p-2 bg-gradient-to-r from-white to-amber-50 hover:from-amber-50 hover:to-orange-50 border border-amber-200 hover:border-amber-300 rounded-lg transition-all duration-300 text-xs text-gray-700 hover:text-amber-700"
                     >
                       <span className="flex items-center gap-2">
@@ -192,6 +169,13 @@ export default function CustomizationRequest() {
               )}
             </div>
           ))}
+          {
+            msgLoading &&
+            <div className="mr-auto py-4 flex gap-5">
+              <Spinner className="" />
+              <span className="text-sm leading-relaxed font-medium">Just a Second</span>
+            </div>
+          }
         </div>
 
         {/* Input Area */}
@@ -206,7 +190,7 @@ export default function CustomizationRequest() {
               className="flex-1 px-4 py-3 border-2 border-amber-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors duration-300 bg-white text-gray-800 placeholder-gray-500"
             />
             <button
-              onClick={sendMessage}
+              onClick={() => { sendMessage(inputMessage) }}
               disabled={!inputMessage.trim()}
               className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 disabled:from-gray-300 disabled:to-gray-400 text-white rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
             >
@@ -218,25 +202,25 @@ export default function CustomizationRequest() {
           {/* Quick Actions */}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
-              onClick={() => handleOptionClick("I want to change the metal type")}
+              onClick={() => sendMessage("I want to change the metal type")}
               className="px-3 py-2 bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-700 rounded-lg text-xs font-medium transition-all duration-300 border border-amber-200"
             >
               Change Metal
             </button>
             <button
-              onClick={() => handleOptionClick("I want a larger diamond")}
+              onClick={() => sendMessage("I want a larger diamond")}
               className="px-3 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 hover:from-orange-200 hover:to-yellow-200 text-orange-700 rounded-lg text-xs font-medium transition-all duration-300 border border-orange-200"
             >
               Larger Diamond
             </button>
             <button
-              onClick={() => handleOptionClick("I want to add engraving")}
+              onClick={() => sendMessage("I want to add engraving")}
               className="px-3 py-2 bg-gradient-to-r from-yellow-100 to-amber-100 hover:from-yellow-200 hover:to-amber-200 text-yellow-700 rounded-lg text-xs font-medium transition-all duration-300 border border-yellow-200"
             >
               Add Engraving
             </button>
             <button
-              onClick={() => handleOptionClick("I want a different setting style")}
+              onClick={() => sendMessage("I want a different setting style")}
               className="px-3 py-2 bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-700 rounded-lg text-xs font-medium transition-all duration-300 border border-amber-200"
             >
               Different Setting
