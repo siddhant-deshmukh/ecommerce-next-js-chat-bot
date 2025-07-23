@@ -36,7 +36,7 @@ export default function HeroSection() {
           {/* Text Content */}
           <div className="flex flex-col mr-2 sm:mr-0 justify-center space-y-8 text-center lg:text-left">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 text-white px-6 py-3 rounded-full text-sm font-medium w-fit mx-auto lg:mx-0 shadow-lg">
+            <div className="inline-flex items-center gap-2 badge-gradient px-6 py-3 rounded-full text-sm font-medium w-fit mx-auto lg:mx-0 shadow-lg">
               <Sparkles className="w-4 h-4" />
               Luxury Collection 2024
             </div>
@@ -50,7 +50,7 @@ export default function HeroSection() {
                 <br className="hidden lg:block" />
                 <span className="pl-3 lg:pl-0 text-black">Jewelry</span>
                 <br />
-                <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="text-gradient">
                   Collection
                 </span>
               </h1>
@@ -112,7 +112,7 @@ export default function HeroSection() {
 
               {/* Image 1 - Top left */}
               <div className="absolute top-0 left-0 w-44 h-44 sm:w-52 sm:h-52 lg:w-60 lg:h-60 xl:w-72 xl:h-72 z-40">
-                <div className="relative w-full h-full bg-gradient-to-br from-white to-amber-50 rounded-2xl shadow-2xl border-2 border-gradient-to-br from-amber-200 to-orange-200 overflow-hidden transform rotate-3 hover:rotate-6 transition-all duration-300 hover:scale-105">
+                <div className="relative w-full h-full bg-gradient-to-br from-white to-amber-50 rounded-2xl shadow-2xl border-2 border-amber-200 overflow-hidden transform rotate-3 hover:rotate-6 transition-all duration-300 hover:scale-105">
                   <Image
                     src="/hero/earing-2-SD.jpg"
                     alt="Diamond Ring"
@@ -129,7 +129,7 @@ export default function HeroSection() {
 
               {/* Image 2 - Top right */}
               <div className="absolute top-16 right-0 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80 z-30">
-                <div className="relative w-full h-full bg-gradient-to-br from-white to-orange-50 rounded-2xl shadow-2xl border-2 border-gradient-to-br from-orange-200 to-yellow-200 overflow-hidden transform -rotate-6 hover:-rotate-12 transition-all duration-300 hover:scale-105">
+                <div className="relative w-full h-full bg-gradient-to-br from-white to-orange-50 rounded-2xl shadow-2xl border-2 border-orange-200 overflow-hidden transform -rotate-6 hover:-rotate-12 transition-all duration-300 hover:scale-105">
                   <Image
                     src="/hero/ring-dark-bg-1-SD.jpg"
                     alt="Gold Necklace"
@@ -146,7 +146,7 @@ export default function HeroSection() {
 
               {/* Image 3 - Bottom left */}
               <div className="absolute bottom-32 left-8 w-52 h-52 sm:w-60 sm:h-60 lg:w-68 lg:h-68 xl:w-80 xl:h-80 z-20">
-                <div className="relative w-full h-full bg-gradient-to-br from-white to-yellow-50 rounded-2xl shadow-2xl border-2 border-gradient-to-br from-yellow-200 to-amber-200 overflow-hidden transform rotate-12 hover:rotate-18 transition-all duration-300 hover:scale-105">
+                <div className="relative w-full h-full bg-gradient-to-br from-white to-yellow-50 rounded-2xl shadow-2xl border-2 border-yellow-200 overflow-hidden transform rotate-12 hover:rotate-18 transition-all duration-300 hover:scale-105">
                   <Image
                     src="/hero/gem-1-SD.jpg"
                     alt="Pearl Earrings"
@@ -163,7 +163,7 @@ export default function HeroSection() {
 
               {/* Image 4 - Bottom right */}
               <div className="absolute bottom-0 right-12 w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 xl:w-72 xl:h-72 z-10">
-                <div className="relative w-full h-full bg-gradient-to-br from-white to-orange-50 rounded-2xl shadow-2xl border-2 border-gradient-to-br from-orange-200 to-amber-200 overflow-hidden transform -rotate-3 hover:-rotate-9 transition-all duration-300 hover:scale-105">
+                <div className="relative w-full h-full bg-gradient-to-br from-white to-orange-50 rounded-2xl shadow-2xl border-2 border-orange-200 overflow-hidden transform -rotate-3 hover:-rotate-9 transition-all duration-300 hover:scale-105">
                   <Image
                     src="/hero/necklace-1-SD.jpg"
                     alt="Silver Bracelet"

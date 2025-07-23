@@ -100,7 +100,7 @@ export default function CustomizationRequest() {
   return (
     <div className="mt-16">
       <div className="text-left mb-3">
-        {/* <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
+        {/* <div className="inline-flex items-center gap-2 badge-gradient px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
           <Settings className="w-4 h-4" />
           Customization Request
         </div> */}
@@ -111,10 +111,10 @@ export default function CustomizationRequest() {
         </p>
       </div>
 
-      <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 overflow-hidden">
+      <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient overflow-hidden">
         {/* Chat Header */}
         {/*  */}
-        <div className="bg-gradient-to-r bg-amber-50/50 text-white p-4">
+        <div className="bg-gradient-to-r bg-amber-50/50 p-4">
           <div className="flex items-center gap-3">
             {/* <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
               <Sparkles className="w-5 h-5" />
@@ -124,7 +124,7 @@ export default function CustomizationRequest() {
               <p className="text-sm opacity-90">Custom Jewelry Specialist</p>
             </div> */}
             <div className="ml-auto">
-              <span className="bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1 rounded-full text-xs font-medium">Live Chat</span>
+              <span className="badge-gradient px-3 py-1 rounded-full text-xs font-medium">Live Chat</span>
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function CustomizationRequest() {
                 <div
                   className={`max-w-[80%] p-4 rounded-2xl ${message.type == 'error' ? `bg-red-100 text-red-950`:(
                     message.sender === "user"
-                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                    ? "badge-gradient"
                     : "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200"
                   )}`}
                 >
@@ -192,7 +192,7 @@ export default function CustomizationRequest() {
             <button
               onClick={() => { sendMessage(inputMessage) }}
               disabled={!inputMessage.trim()}
-              className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 disabled:from-gray-300 disabled:to-gray-400 text-white rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
+              className="px-6 py-3 badge-gradient hover:from-amber-600 hover:to-orange-600 disabled:from-gray-300 disabled:to-gray-400 rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
             >
               <Send className="w-4 h-4" />
               Send
@@ -232,8 +232,8 @@ export default function CustomizationRequest() {
       {/* Customization Benefits */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="text-center p-6 bg-gradient-to-br from-white to-amber-50 rounded-xl border border-amber-200 shadow-lg">
-          <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Settings className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 badge-gradient rounded-full flex items-center justify-center mx-auto mb-4">
+            <Settings className="w-6 h-6" />
           </div>
           <h3 className="font-semibold text-black mb-2">Expert Design</h3>
           <p className="text-sm text-gray-600">Our master jewelers will craft your vision with precision and care</p>

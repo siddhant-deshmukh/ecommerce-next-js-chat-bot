@@ -62,7 +62,7 @@ export default function ContactUs() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
+          <div className="inline-flex items-center gap-2 badge-gradient px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
             <MessageCircle className="w-4 h-4" />
             Get In Touch
           </div>
@@ -70,7 +70,7 @@ export default function ContactUs() {
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
             <span className="text-black">Let's Create Something</span>
             <br />
-            <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent">
+            <span className="text-gradient">
               Beautiful Together
             </span>
           </h2>
@@ -86,7 +86,7 @@ export default function ContactUs() {
           {contactMethods.map((method, index) => (
             <div
               key={index}
-              className="group bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 p-6 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+              className="group bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient-amber p-6 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-2xl"
             >
               <div
                 className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${method.gradient} rounded-full text-white mb-4 group-hover:scale-110 transition-transform duration-300`}
@@ -106,7 +106,7 @@ export default function ContactUs() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Form - Takes up 2 columns */}
           <div className="lg:col-span-2">
-            <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 px-4 sm:px-8 p-8">
+            <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient-amber px-4 sm:px-8 p-8">
               <div className="text-center mb-8">
                 <h3 className="text-3xl font-bold text-black mb-4">Send us a Message</h3>
                 <p className="text-gray-600">
@@ -225,12 +225,12 @@ export default function ContactUs() {
           {/* Sidebar Information */}
           <div className="space-y-8">
             {/* Store Information */}
-            <div className="bg-gradient-to-br from-white to-orange-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-orange-200/50 to-yellow-200/50 p-6">
+            <div className="bg-gradient-to-br from-white to-orange-50/50 rounded-2xl shadow-xl border-2 border-orange-200/50 p-6">
               <h3 className="text-xl font-bold text-black mb-6 text-center">Visit Our Store</h3>
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
+                  <div className="badge-gradient p-2 rounded-full flex-shrink-0">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
@@ -262,13 +262,13 @@ export default function ContactUs() {
             </div>
 
             {/* Our Guarantees */}
-            <div className="bg-gradient-to-br from-white to-yellow-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-yellow-200/50 to-amber-200/50 p-6">
+            <div className="bg-gradient-to-br from-white to-yellow-50/50 rounded-2xl shadow-xl border-2 border-yellow-200/50 p-6">
               <h3 className="text-xl font-bold text-black mb-6 text-center">Our Promise</h3>
 
               <div className="space-y-4">
                 {guarantees.map((guarantee, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
+                    <div className="badge-gradient p-2 rounded-full flex-shrink-0">
                       <guarantee.icon className="w-4 h-4" />
                     </div>
                     <div>
@@ -281,7 +281,7 @@ export default function ContactUs() {
             </div>
 
             {/* FAQ Quick Links */}
-            <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 p-6">
+            <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient-amber p-6">
               <h3 className="text-xl font-bold text-black mb-6 text-center">Quick Help</h3>
 
               <div className="space-y-3">
@@ -305,7 +305,7 @@ export default function ContactUs() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 text-center bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-8 border-2 border-gradient-to-r from-amber-200/50 to-orange-200/50">
+        <div className="mt-16 text-center bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-8 border-2 border-amber-200/50">
           <h3 className="text-2xl font-bold text-black mb-4">Ready to Find Your Perfect Piece?</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Our jewelry experts are standing by to help you discover or create the perfect piece for any occasion. Don't
@@ -314,7 +314,7 @@ export default function ContactUs() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="btn-gradient px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <Phone className="w-5 h-5 mr-2" />
               Call Now: (555) 123-4567

@@ -119,6 +119,21 @@
   body {
     @apply bg-background text-foreground;
   }
+  .text-gradient {
+    @apply bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent;
+  }
+  .btn-gradient {
+    @apply bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white;
+  }
+  .badge-gradient {
+    @apply bg-gradient-to-r from-amber-500 to-orange-500 text-white;
+  }
+  /* .border-gradient-amber {
+    @apply border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50  ;
+  } */
+  .border-gradient-amber {
+    @apply border-2 border-amber-200/50;
+  }
 }
 
 /* Custom Keyframes */

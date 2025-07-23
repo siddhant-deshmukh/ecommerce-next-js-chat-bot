@@ -62,7 +62,7 @@ export default function Testimonials() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
+          <div className="inline-flex items-center gap-2 badge-gradient px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
             <Quote className="w-4 h-4" />
             Customer Stories
           </div>
@@ -70,7 +70,7 @@ export default function Testimonials() {
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
             <span className="text-black">What Our</span>
             <br />
-            <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent">
+            <span className="text-gradient">
               Customers Say
             </span>
           </h2>
@@ -86,7 +86,7 @@ export default function Testimonials() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="group flex flex-col min-h-52 relative bg-gradient-to-br from-white to-amber-50/30 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/30 to-orange-200/30 p-6 transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl"
+              className="group flex flex-col min-h-52 relative bg-gradient-to-br from-white to-amber-50/30 rounded-2xl shadow-xl border-2 border-amber-200/30  p-6 transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl"
             >
               {/* Quote Icon */}
               <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-100 to-orange-100 p-2 rounded-full">
@@ -117,8 +117,8 @@ export default function Testimonials() {
                     height={60}
                     className="rounded-full border-2 w-[60px] h-[60px] border-amber-200"
                   />
-                  <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-amber-500 to-orange-500 p-1 rounded-full">
-                    <Star className="w-3 h-3 text-white fill-white" />
+                  <div className="absolute -bottom-1 -right-1 badge-gradient p-1 rounded-full">
+                    <Star className="w-3 h-3" />
                   </div>
                 </div>
                 <div>

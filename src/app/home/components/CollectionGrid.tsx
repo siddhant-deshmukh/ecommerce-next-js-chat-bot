@@ -57,7 +57,7 @@ export default function CollectionsGrid() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
+          <div className="inline-flex items-center gap-2 badge-gradient px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg">
             <Sparkles className="w-4 h-4" />
             Our Collections
           </div>
@@ -65,7 +65,7 @@ export default function CollectionsGrid() {
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
             <span className="text-black">Explore Our</span>
             <br />
-            <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent">
+            <span className="text-gradient">
               Jewelry Collections
             </span>
           </h2>
@@ -80,13 +80,13 @@ export default function CollectionsGrid() {
           {collections.map((collection, index) => (
             <div
               key={index}
-              className={`group relative bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 overflow-hidden transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl ${
+              className={`group relative bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient-amber overflow-hidden transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl ${
                 collection.featured ? "lg:col-span-1 lg:row-span-2" : ""
               }`}
             >
               {/* Featured Badge */}
               {collection.featured && (
-                <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                <div className="absolute top-4 right-4 z-20 badge-gradient px-3 py-1 rounded-full text-xs font-semibold">
                   Featured
                 </div>
               )}

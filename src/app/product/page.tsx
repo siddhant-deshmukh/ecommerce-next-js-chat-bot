@@ -103,7 +103,7 @@ export default function ProductDetail() {
           {/* Product Image Gallery */}
           <div className="w-full lg:w-1/2 static lg:sticky top-24 self-start">
             {/* Main Image */}
-            <div className="relative bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 p-6 aspect-square">
+            <div className="relative bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient p-6 aspect-square">
               <Image
                 src={images[mainImage] || "/placeholder.svg"}
                 alt="Radiant Solitaire Diamond Ring"
@@ -129,7 +129,7 @@ export default function ProductDetail() {
               </button>
 
               {/* Featured Badge */}
-              <div className="absolute top-4 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+              <div className="absolute top-4 left-4 badge-gradient px-3 py-1 rounded-full text-xs font-semibold">
                 Bestseller
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function ProductDetail() {
                   $5,999.00
                 </span>
                 <span className="text-lg text-gray-500 line-through">$6,499.00</span>
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded text-sm font-medium">
+                <span className="badge-gradient px-2 py-1 rounded text-sm font-medium">
                   Save $500
                 </span>
               </div>
@@ -242,7 +242,7 @@ export default function ProductDetail() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Button
                   size="lg"
-                  className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  className="flex-1 btn-gradient py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 >
                   <ShoppingBag className="w-5 h-5 mr-2" />
                   Add to Cart
@@ -298,7 +298,7 @@ export default function ProductDetail() {
             <div className="mt-16">
               <h2 className="text-2xl font-bold text-black mb-6">Product Specifications</h2>
 
-              <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 p-6 overflow-hidden">
+              <div className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient p-6 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <tbody>
@@ -328,11 +328,11 @@ export default function ProductDetail() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h2 className="text-2xl font-bold text-black mb-6">Features & Benefits</h2>
-            <div className="bg-gradient-to-br from-white to-orange-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-orange-200/50 to-yellow-200/50 p-6">
+            <div className="bg-gradient-to-br from-white to-orange-50/50 rounded-2xl shadow-xl border-2 border-orange-200/50 p-6">
               <ul className="space-y-3">
                 {features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1 rounded-full text-white flex-shrink-0 ">
+                    <div className="badge-gradient p-1 rounded-fullflex-shrink-0 ">
                       <Check className="w-4 h-4" />
                     </div>
                     <span className="text-gray-700">{feature}</span>
@@ -344,9 +344,9 @@ export default function ProductDetail() {
 
           <div>
             <h2 className="text-2xl font-bold text-black mb-6">Care Instructions</h2>
-            <div className="bg-gradient-to-br from-white to-yellow-50/50 rounded-2xl shadow-xl border-2 border-gradient-to-br from-yellow-200/50 to-amber-200/50 p-6">
+            <div className="bg-gradient-to-br from-white to-yellow-50/50 rounded-2xl shadow-xl border-2 border-gradient-amber p-6">
               <div className="flex items-center gap-3 mb-4">
-                {/* <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
+                {/* <div className="badge-gradient p-2 rounded-full text-white flex-shrink-0">
                   <Info className="w-4 h-4" />
                 </div> */}
                 <p className="text-gray-700">
@@ -361,7 +361,7 @@ export default function ProductDetail() {
                     "Store separately to prevent scratching",
                     "Have professional cleaning twice a year"].map((ele) => {
                       return <li className="flex items-center gap-4">
-                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-2 rounded-full text-white flex-shrink-0">
+                        <div className="badge-gradient p-2 rounded-full flex-shrink-0">
                         </div>
                         <span>{ele}</span>
                       </li>

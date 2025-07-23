@@ -6,13 +6,13 @@ export default function Footer() {
       <div className="mx-auto container flex flex-col md:flex-row gap-20 justify-between">
         
         <div className="flex items-start space-x-3">
-          <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-3 rounded-full shadow-lg">
-            <Sparkles className="w-6 h-6 text-white" />
+          <div className="badge-gradient p-3 rounded-full shadow-lg">
+            <Sparkles className="w-6 h-6 " />
           </div>
           <div>
             <div className="text-2xl font-bold">
               <span className="text-white">Luxury</span>
-              <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="text-gradient pl-1">
                 Gems
               </span>
             </div>

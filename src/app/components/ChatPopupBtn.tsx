@@ -50,16 +50,16 @@ export default function ChatInterface() {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 z-50 flex items-center justify-center"
+        className="fixed bottom-6 right-6 w-16 h-16 btn-gradient rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 z-50 flex items-center justify-center"
       >
         <MessageCircle className="w-6 h-6" />
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 h-96 bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-2xl border-2 border-gradient-to-br from-amber-200/50 to-orange-200/50 z-50 flex flex-col overflow-hidden">
+        <div className="fixed bottom-24 right-6 w-80 h-96 bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-2xl border-gradient z-50 flex flex-col overflow-hidden">
           {/* Chat Header */}
-          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 flex items-center justify-between">
+          <div className="badge-gradient p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                 <MessageCircle className="w-4 h-4" />
@@ -84,7 +84,7 @@ export default function ChatInterface() {
                 <div
                   className={`max-w-[80%] p-3 rounded-2xl ${
                     message.sender === "user"
-                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                      ? "badge-gradient"
                       : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800"
                   }`}
                 >
@@ -110,7 +110,7 @@ export default function ChatInterface() {
               />
               <button
                 onClick={sendMessage}
-                className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl flex items-center justify-center transition-all duration-300 transform hover:scale-105"
+                className="w-10 h-10 btn-gradient rounded-xl flex items-center justify-center transition-all duration-300 transform hover:scale-105"
               >
                 <Send className="w-4 h-4" />
               </button>
