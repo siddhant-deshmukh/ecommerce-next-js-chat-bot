@@ -19,6 +19,8 @@ export default function Navbar() {
     setIsClient(true)
   }, [])
 
+  if(!isClient) return <div></div>;
+  
   return (
     <nav className="bg-gradient-to-r from-white via-amber-50/30 to-orange-50/20 shadow-xl border-b-2 border-gradient-amber sticky top-0 left-0 right-0 z-[60] backdrop-blur-sm">
       <div className="container mx-auto px-4">

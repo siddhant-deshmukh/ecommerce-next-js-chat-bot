@@ -1,52 +1,113 @@
-"use client"
-
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Heart,
   ShoppingBag,
   Share2,
   ChevronRight,
-  ChevronLeft,
   Star,
   Check,
-  Info,
   Truck,
   Shield,
   RefreshCw,
-  Minus,
-  Plus,
 } from "lucide-react"
 import Image from "next/image"
-import CustomizationRequest from "./[product_id]/components/CustomizationRequest"
+import CustomizationRequest from "./components/CustomizationRequest"
+import SelectQuantity from "./components/SelectQuantity"
+import ProductImgGallery from "./components/ImgSection"
+import dbConnect from "@/lib/dbConnect"
+import Product from "@/models/Product"
+import { Types } from "mongoose"
+import { ProductSpecificationType, ProductType } from "@/models"
 
-export default function ProductDetail() {
-  const [mainImage, setMainImage] = useState(0)
-  const [quantity, setQuantity] = useState(1)
+interface ProductPageProps {
+  params: Promise<{ product_id: string }>;
+}
 
-  // Product images
-  const images = [
-    "/hero/earing-1-MD.jpg",
-    "/hero/gem-1-SD.jpg",
-    "/hero/necklace-1-HD.jpg",
-    "/hero/earing-1-MD.jpg",
-    "/hero/ring-dark-bg-1-SD.jpg",
-  ]
+export default async function ProductDetail({ params }: ProductPageProps) {
+  const { product_id } = await params;
 
-  // Product specifications
-  const specifications = [
-    { name: "Metal Type", value: "18K White Gold" },
-    { name: "Diamond Carat", value: "1.5 ct" },
-    { name: "Diamond Cut", value: "Round Brilliant" },
-    { name: "Diamond Color", value: "F (Colorless)" },
-    { name: "Diamond Clarity", value: "VS1 (Very Slightly Included)" },
-    { name: "Ring Size", value: "Available in sizes 4-10" },
-    { name: "Setting Type", value: "Prong Setting" },
-    { name: "Band Width", value: "2.3mm" },
-    { name: "Certificate", value: "GIA Certified" },
-  ]
+  await dbConnect();
 
-  // Product features
+  const products = await Product.aggregate([
+    { $match: { _id: new Types.ObjectId(product_id) } },
+    {
+      $lookup: {
+        from: 'productspecifications',
+        let: { productId: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ['$product_id', '$$productId']
+              }
+            }
+          },
+          {
+            $project: {
+              key: 1,
+              value: 1
+            }
+          }
+        ],
+        as: 'specifications'
+      }
+    },
+    {
+      $lookup: {
+        from: 'discounts',
+        let: { productId: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ['$product_id', '$$productId'] },
+                  { $eq: ['$is_active', true] }
+                ]
+              }
+            }
+          },
+          { $limit: 1 }
+        ],
+        as: 'active_discount'
+      }
+    },
+    {
+      $addFields: {
+        active_discount: {
+          $ifNull: [{ $arrayElemAt: ['$active_discount', 0] }, {}]
+        }
+      }
+    },
+
+    {
+      $addFields: {
+        discount_percentage: {
+          $ifNull: ['$active_discount.percentage', 0]
+        },
+        current_price: {
+          $round: [
+            {
+              $multiply: [
+                '$price',
+                {
+                  $subtract: [
+                    1,
+                    { $divide: [{ $ifNull: ['$active_discount.percentage', 0] }, 100] }
+                  ]
+                }
+              ]
+            },
+            2
+          ]
+        }
+      }
+    }
+  ]);
+
+  const product = products[0] as ProductType & { current_price: number, discount_percentage: number, specifications: ProductSpecificationType[] };
+
+
   const features = [
     "Handcrafted by master jewelers",
     "Ethically sourced diamonds",
@@ -55,153 +116,68 @@ export default function ProductDetail() {
     "Includes luxury gift packaging",
   ]
 
-  // Handle quantity change
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-    }
-  }
-
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1)
-  }
-
-  // Handle image navigation
-  const nextImage = () => {
-    setMainImage((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-  }
-
-  const prevImage = () => {
-    setMainImage((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-  }
-
   return (
     <div className="py-12 bg-gradient-to-br from-white via-orange-50/10 to-amber-50/20">
-      {/* Background decorative elements */}
       <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-amber-200/20 to-orange-200/20 rounded-full blur-2xl"></div>
       <div className="absolute bottom-20 right-10 w-48 h-48 bg-gradient-to-br from-orange-200/20 to-yellow-200/20 rounded-full blur-2xl"></div>
 
       <div className="container  mx-auto px-4">
-        {/* Breadcrumb */}
         <div className="flex items-center text-sm text-gray-600 mb-8">
           <a href="#" className="hover:text-amber-600 transition-colors">
             Home
           </a>
           <ChevronRight className="w-4 h-4 mx-2" />
-          <a href="#" className="hover:text-amber-600 transition-colors">
+          {/* <a href="#" className="hover:text-amber-600 transition-colors">
             Jewelry
           </a>
           <ChevronRight className="w-4 h-4 mx-2" />
           <a href="#" className="hover:text-amber-600 transition-colors">
             Rings
           </a>
-          <ChevronRight className="w-4 h-4 mx-2" />
-          <span className="text-gray-900 font-medium">Radiant Solitaire Diamond Ring</span>
+          <ChevronRight className="w-4 h-4 mx-2" /> */}
+          <span className="text-gray-900 font-medium">{product.title}</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12 items-start">
-          {/* Product Image Gallery */}
-          <div className="w-full lg:w-1/2 static lg:sticky top-24 self-start">
-            {/* Main Image */}
-            <div className="relative bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient p-6 aspect-square">
-              <Image
-                src={images[mainImage] || "/placeholder.svg"}
-                alt="Radiant Solitaire Diamond Ring"
-                width={600}
-                height={600}
-                className="w-full h-full object-contain"
-              />
+          <ProductImgGallery images={[product.main_image, ...product.other_images]} />
 
-              {/* Image Navigation Arrows */}
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-300"
-                aria-label="Previous image"
-              >
-                <ChevronLeft className="w-5 h-5 text-gray-800" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-300"
-                aria-label="Next image"
-              >
-                <ChevronRight className="w-5 h-5 text-gray-800" />
-              </button>
-
-              {/* Featured Badge */}
-              <div className="absolute top-4 left-4 badge-gradient px-3 py-1 rounded-full text-xs font-semibold">
-                Bestseller
-              </div>
-            </div>
-
-            {/* Thumbnail Gallery */}
-            <div className="flex gap-4 mt-6 overflow-x-auto pb-2">
-              {images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setMainImage(index)}
-                  className={`relative min-w-[80px] h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${mainImage === index ? "border-amber-500 shadow-md" : "border-gray-200 hover:border-amber-300"
-                    }`}
-                >
-                  <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`Thumbnail ${index + 1}`}
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Product Information */}
           <div className="w-full lg:w-1/2 space-y-8">
-            {/* Product Title and Rating */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-black mb-2">Radiant Solitaire Diamond Ring</h1>
-              <p className="text-lg text-gray-600 mb-4">18K White Gold | 1.5 Carat Diamond</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-black mb-2">{product.title}</h1>
+              <p className="text-lg text-gray-600 mb-4">{product.tagline}</p>
 
-              {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex">
-                  {[...Array(5)].map((_, i) => (
+                  {[...Array(product.avg_rating)].map((_, i) => (
                     <Star key={i} className={`w-5 h-5 ${i < 5 ? "fill-amber-400 text-amber-400" : "text-gray-300"}`} />
                   ))}
                 </div>
-                <span className="text-gray-700">4.9</span>
-                <span className="text-gray-500">(128 reviews)</span>
+                <span className="text-gray-700">{product.avg_rating}</span>
+                <span className="text-gray-500">({product.total_number_reviews} reviews)</span>
               </div>
 
-              {/* Price */}
               <div className="flex items-center gap-4 mb-4">
                 <span className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                  $5,999.00
+                  ₹{product.current_price.toLocaleString()}
                 </span>
-                <span className="text-lg text-gray-500 line-through">$6,499.00</span>
+                <span className="text-lg text-gray-500 line-through">₹{product.price.toLocaleString()}</span>
                 <span className="badge-gradient px-2 py-1 rounded text-sm font-medium">
-                  Save $500
+                  Save {product.discount_percentage.toLocaleString()}%
                 </span>
               </div>
 
-              {/* Short Description */}
               <p className="text-gray-700 leading-relaxed">
-                Elevate your special moments with our exquisite Radiant Solitaire Diamond Ring. This stunning piece
-                features a brilliant 1.5 carat diamond set in luxurious 18K white gold, creating a timeless symbol of
-                elegance and love.
+                {product.description}
               </p>
             </div>
 
-            {/* Divider */}
             <div className="border-t border-gray-200"></div>
 
-            {/* Purchase Actions */}
             <div className="space-y-6">
-              {/* Size Selection */}
               <div>
                 <label className="block text-sm font-semibold text-black mb-2">Ring Size</label>
                 <div className="flex flex-wrap gap-2">
-                  {[4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10].map((size) => (
+                  {product.available_size.map((size) => (
                     <button
                       key={size}
                       className="w-10 h-10 rounded-full border-2 border-amber-200 hover:border-amber-500 focus:border-amber-500 focus:outline-none transition-colors duration-300 flex items-center justify-center text-sm font-medium"
@@ -212,33 +188,8 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Quantity Selector */}
-              <div>
-                <label className="block text-sm font-semibold text-black mb-2">Quantity</label>
-                <div className="flex items-center">
-                  <button
-                    onClick={decreaseQuantity}
-                    className="w-10 h-10 rounded-l-lg bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center hover:bg-gray-200 transition-colors duration-300"
-                  >
-                    <Minus className="w-4 h-4 text-gray-700" />
-                  </button>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number.parseInt(e.target.value) || 1)}
-                    min="1"
-                    className="w-16 h-10 border-t border-b border-gray-300 text-center text-gray-700 focus:outline-none"
-                  />
-                  <button
-                    onClick={increaseQuantity}
-                    className="w-10 h-10 rounded-r-lg bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center hover:bg-gray-200 transition-colors duration-300"
-                  >
-                    <Plus className="w-4 h-4 text-gray-700" />
-                  </button>
-                </div>
-              </div>
+              <SelectQuantity />
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Button
                   size="lg"
@@ -270,7 +221,6 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Shipping & Returns */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-100">
                 <Truck className="w-5 h-5 text-amber-600" />
@@ -302,13 +252,13 @@ export default function ProductDetail() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <tbody>
-                      {specifications.map((spec, index) => (
+                      {product.specifications.map((spec, index) => (
                         <tr
                           key={index}
                           className={`${index % 2 === 0 ? "bg-white" : "bg-gradient-to-r from-amber-50/50 to-orange-50/50"
                             }`}
                         >
-                          <td className="py-3 px-4 font-semibold text-black border-b border-amber-100">{spec.name}</td>
+                          <td className="py-3 px-4 font-semibold text-black border-b border-amber-100">{spec.key}</td>
                           <td className="py-3 px-4 text-gray-700 border-b border-amber-100">{spec.value}</td>
                         </tr>
                       ))}
@@ -359,8 +309,8 @@ export default function ProductDetail() {
                     "Avoid contact with harsh chemicals and cleaning agents",
                     "Remove before swimming, exercising, or household chores",
                     "Store separately to prevent scratching",
-                    "Have professional cleaning twice a year"].map((ele) => {
-                      return <li className="flex items-center gap-4">
+                    "Have professional cleaning twice a year"].map((ele, index) => {
+                      return <li key={index} className="flex items-center gap-4">
                         <div className="badge-gradient p-2 rounded-full flex-shrink-0">
                         </div>
                         <span>{ele}</span>
@@ -402,14 +352,14 @@ export default function ProductDetail() {
                   <h3 className="font-semibold text-black group-hover:text-amber-600 transition-colors duration-300">
                     Diamond Cluster Ring
                   </h3>
-                  <div className="flex items-center gap-1 my-1">
+                  {/* <div className="flex items-center gap-1 my-1">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                     ))}
-                  </div>
+                  </div> */}
                   <div className="flex items-baseline gap-2">
-                    <span className="font-bold text-black">$2,499</span>
-                    <span className="text-sm text-gray-500 line-through">$2,899</span>
+                    <span className="font-bold text-black">₹2,499</span>
+                    <span className="text-sm text-gray-500 line-through">₹2,899</span>
                   </div>
                 </div>
               </div>
