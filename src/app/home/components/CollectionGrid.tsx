@@ -109,7 +109,8 @@ export default function CollectionsGrid() {
                   </span> */}
                     </div>
 
-                    <p className="text-gray-600 mb-4 leading-relaxed">{product.description}</p>
+                    <p className="text-gray-600 mb-4 leading-relaxed line-clamp-2">
+                      {product.description}</p>
                     <div className="flex items-center gap-4">
                       <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                         ₹{product.current_price.toLocaleString()}
