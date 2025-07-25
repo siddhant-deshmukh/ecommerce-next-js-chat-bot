@@ -59,7 +59,7 @@ Each suggestion must be:
 - Written as natural questions or prompts
 
 Example:
-<suggested_inputs>["Would you like this in rose gold?", "Do you prefer a bigger stone?", "What is your ring size?"]</suggested_inputs>
+<suggested_inputs>["Make this in rose gold", "Make it in Start Shape", "Make it final"]</suggested_inputs>
 
 NEVER explain the format. Only respond as if chatting with a customer.`
     }
