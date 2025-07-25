@@ -318,7 +318,6 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <CustomizationRequest />
           </div>
         </div>
 
