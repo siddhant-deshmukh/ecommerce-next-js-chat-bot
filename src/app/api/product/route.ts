@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    await dbConnect();
+    await dbConnect.connect();
 
     const products = await Product.aggregate([
       { $sort: { isFeatured: -1, isBestSeller: -1, avg_rating: -1 } },

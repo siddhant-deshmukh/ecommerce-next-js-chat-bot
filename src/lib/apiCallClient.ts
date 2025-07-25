@@ -22,6 +22,9 @@ const apiCall = async <T = any>(
     if(!resData) {
       throw error
     }
+    if(resData && resData.msg) {
+      toast.success(resData.msg);
+    }
     return resData
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const ipHeader = req.headers.get('x-forwarded-for');
   const ip = ipHeader?.split(',')[0].trim() || 'unknown';
   
-  await dbConnect();
+  await dbConnect.connect();
 
   const allowed = await checkRateLimit(ip, RATE_LIMIT_WINDOW, RATE_LIMIT_MAX);
   if (!allowed) {

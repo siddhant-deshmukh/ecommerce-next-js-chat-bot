@@ -1,8 +1,5 @@
-import { Button } from "@/components/ui/button"
 import {
   Heart,
-  ShoppingBag,
-  Share2,
   ChevronRight,
   Star,
   Check,
@@ -12,21 +9,20 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import CustomizationRequest from "./components/CustomizationRequest"
-import SelectQuantity from "./components/SelectQuantity"
 import ProductImgGallery from "./components/ImgSection"
 import dbConnect from "@/lib/dbConnect"
 import Product from "@/models/Product"
 import { Types } from "mongoose"
-import { ProductSpecificationType, ProductType } from "@/models"
+import { IProduct } from "@/models"
+import ActionBts from "./components/ActionBtns"
+import { cache } from "react"
 
 interface ProductPageProps {
   params: Promise<{ product_id: string }>;
 }
 
-export default async function ProductDetail({ params }: ProductPageProps) {
-  const { product_id } = await params;
-
-  await dbConnect();
+const getProduct = cache(async (product_id: string) => {
+  await dbConnect.connect();
 
   const products = await Product.aggregate([
     { $match: { _id: new Types.ObjectId(product_id) } },
@@ -103,10 +99,26 @@ export default async function ProductDetail({ params }: ProductPageProps) {
         }
       }
     }
-  ]);
+  ]).option({ lean: true });
 
-  const product = products[0] as ProductType & { current_price: number, discount_percentage: number, specifications: ProductSpecificationType[] };
+  const product_ = products[0] as IProduct;
 
+  const product = JSON.parse(JSON.stringify(product_)) as IProduct;
+  return product
+})
+
+export async function generateMetadata({ params } : ProductPageProps ) {
+  const { product_id } = await params;
+  const product = await getProduct(product_id);
+  return { title: product.title };
+}
+
+export default async function ProductDetail({ params }: ProductPageProps) {
+  const { product_id } = await params;
+
+
+  
+  const product = await getProduct(product_id)
 
   const features = [
     "Handcrafted by master jewelers",
@@ -139,7 +151,9 @@ export default async function ProductDetail({ params }: ProductPageProps) {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12 items-start">
-          <ProductImgGallery images={[product.main_image, ...product.other_images]} />
+          <div className="w-full lg:w-1/2 static lg:sticky top-24 self-start">
+            <ProductImgGallery images={[product.main_image, ...product.other_images]} />
+          </div>
 
           <div className="w-full lg:w-1/2 space-y-8">
             <div>
@@ -173,52 +187,8 @@ export default async function ProductDetail({ params }: ProductPageProps) {
 
             <div className="border-t border-gray-200"></div>
 
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-black mb-2">Ring Size</label>
-                <div className="flex flex-wrap gap-2">
-                  {product.available_size.map((size) => (
-                    <button
-                      key={size}
-                      className="w-10 h-10 rounded-full border-2 border-amber-200 hover:border-amber-500 focus:border-amber-500 focus:outline-none transition-colors duration-300 flex items-center justify-center text-sm font-medium"
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <SelectQuantity />
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <Button
-                  size="lg"
-                  className="flex-1 btn-gradient py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                >
-                  <ShoppingBag className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </Button>
-                <Button
-                  size="lg"
-                  className="flex-1 bg-gradient-to-r from-gray-800 via-black to-gray-900 hover:from-black hover:via-gray-900 hover:to-black text-white py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                >
-                  Buy Now
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="w-14 h-14 border-2 border-amber-200 hover:border-amber-500 text-amber-600 hover:bg-amber-50 transition-all duration-300 bg-transparent"
-                >
-                  <Heart className="w-6 h-6" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="w-14 h-14 border-2 border-amber-200 hover:border-amber-500 text-amber-600 hover:bg-amber-50 transition-all duration-300 bg-transparent"
-                >
-                  <Share2 className="w-6 h-6" />
-                </Button>
-              </div>
+            <div className="space-y-6">              
+              <ActionBts product={product} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -97,6 +97,11 @@ export default function CustomizationRequest() {
     }
   }, [messages]);
 
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+  if (!isClient) return <div className="w-full h-14"></div>;
   return (
     <div className="mt-16">
       <div className="text-left mb-3">

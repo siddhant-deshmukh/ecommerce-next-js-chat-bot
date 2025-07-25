@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     const { product_id } = await context.params;
-    await dbConnect();
+    await dbConnect.connect();
 
 
     const products = await Product.aggregate([

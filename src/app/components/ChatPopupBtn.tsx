@@ -1,7 +1,7 @@
 "use client"
 
 import { MessageCircle, Send } from "lucide-react"
-import { KeyboardEvent, useState } from "react"
+import { KeyboardEvent, useEffect, useState } from "react"
 
 export default function ChatInterface() {
   const [isOpen, setIsOpen] = useState(false)
@@ -45,6 +45,11 @@ export default function ChatInterface() {
     }
   }
 
+  const [isClient, setIsClient] = useState(false)
+    useEffect(() => {
+      setIsClient(true)
+    }, [])
+    if (!isClient) return <div className="w-full h-14"></div>;
   return (
     <>
       {/* Chat Toggle Button */}

@@ -1,48 +1,72 @@
 import mongoose from 'mongoose';
 
-let isConnected = false;
+class DatabaseConnection {
+  private static instance: DatabaseConnection;
+  private connection: Promise<typeof mongoose> | null = null;
 
-export default async function dbConnect() {
-  if (isConnected && mongoose.connection.readyState === 1) {
-    return;
+  private constructor() {}
+
+  public static getInstance(): DatabaseConnection {
+    if (!DatabaseConnection.instance) {
+      DatabaseConnection.instance = new DatabaseConnection();
+    }
+    return DatabaseConnection.instance;
   }
 
-  try {
+  public async connect(): Promise<typeof mongoose> {
+    if (this.connection) {
+      return this.connection;
+    }
+
+    if (mongoose.connection.readyState === 1) {
+      return mongoose;
+    }
+
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
       throw new Error("MONGODB_URI not set in environment variables");
     }
-    mongoose.set('strictQuery', false);
+
     const options = {
       bufferCommands: false,
-      maxPoolSize: 10,
+      maxPoolSize: 1,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
+      family: 4,
+      maxIdleTimeMS: 30000,
     };
 
-    await mongoose.connect(mongoUri, options);
-    
-    isConnected = true;
-    console.log('MongoDB connected successfully');
-    
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    isConnected = false;
-    throw error;
+    try {
+      this.connection = mongoose.connect(mongoUri, options);
+      const result = await this.connection;
+      
+      mongoose.connection.on('error', () => {
+        this.connection = null;
+      });
+
+      mongoose.connection.on('disconnected', () => {
+        this.connection = null;
+      });
+
+      return result;
+    } catch (error) {
+      this.connection = null;
+      throw error;
+    }
   }
 }
 
+// Export singleton instance
+export default DatabaseConnection.getInstance();
+
 mongoose.connection.on('connected', () => {
   console.log('Mongoose connected to MongoDB');
-  isConnected = true;
 });
 
 mongoose.connection.on('error', (err) => {
   console.error('Mongoose connection error:', err);
-  isConnected = false;
 });
 
 mongoose.connection.on('disconnected', () => {
   console.log('Mongoose disconnected');
-  isConnected = false;
 });

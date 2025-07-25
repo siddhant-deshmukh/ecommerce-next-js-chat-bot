@@ -179,20 +179,20 @@ export default function HeroSection() {
               </div>
 
               {/* Enhanced floating accent elements */}
-              <div className="absolute top-8 right-8 bg-gradient-to-r from-white to-amber-50 rounded-full p-4 shadow-xl border-2 border-amber-200 z-50 animate-pulse">
+              <div className="absolute top-8 right-8 bg-gradient-to-r from-white to-amber-50 rounded-full p-4 shadow-xl border-2 border-amber-200 z-[45] animate-pulse">
                 <Sparkles className="w-6 h-6 text-amber-500" />
               </div>
 
-              <div className="absolute bottom-8 left-0 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 text-white rounded-full p-4 shadow-xl z-50 animate-bounce">
+              <div className="absolute bottom-8 left-0 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 text-white rounded-full p-4 shadow-xl z-[45] animate-bounce">
                 <Star className="w-6 h-6" />
               </div>
 
               {/* Additional decorative elements */}
-              <div className="absolute top-1/2 left-0 bg-gradient-to-r from-yellow-100 to-amber-100 rounded-full p-3 shadow-lg border border-yellow-200 z-50">
+              <div className="absolute top-1/2 left-0 bg-gradient-to-r from-yellow-100 to-amber-100 rounded-full p-3 shadow-lg border border-yellow-200 z-[45]">
                 <Heart className="w-4 h-4 text-yellow-600" />
               </div>
 
-              <div className="absolute bottom-1/4 right-0 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full p-3 shadow-lg border border-orange-200 z-50">
+              <div className="absolute bottom-1/4 right-0 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full p-3 shadow-lg border border-orange-200 z-[45]">
                 <Diamond className="w-4 h-4 text-orange-600" />
               </div>
             </div>

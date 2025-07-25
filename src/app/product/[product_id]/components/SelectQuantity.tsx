@@ -1,20 +1,29 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function SelectQuantity() {
-  const [quantity, setQuantity] = useState(1)
+export default function SelectQuantity({ onQuantityChange, quantity }: { onQuantityChange: (value: number) => void, quantity: number }) {
+
 
   const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
+    if(quantity > 2) {
+      onQuantityChange(quantity - 1);
+      return;
     }
+    onQuantityChange(1)
   }
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1)
+    onQuantityChange(quantity + 1)
   }
+
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  if (!isClient) return <div className="w-full h-14"></div>;
 
   return (
     <div>
@@ -29,7 +38,7 @@ export default function SelectQuantity() {
         <input
           type="number"
           value={quantity}
-          onChange={(e) => setQuantity(Number.parseInt(e.target.value) || 1)}
+          onChange={decreaseQuantity}
           min="1"
           className="w-16 h-10 border-t border-b border-amber-300 text-center text-amber-700 focus:outline-none"
         />

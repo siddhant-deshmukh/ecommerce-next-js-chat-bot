@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Search, ShoppingBag, User, Heart, Phone, Sparkles } from "lucide-react"
+import { Menu, X, ShoppingBag, User, Phone, Sparkles } from "lucide-react"
+import { useApp } from "@/context/AppContext"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { setShowAuth, setShowCart, logout, user, cart, authLoading } = useApp();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -19,10 +22,10 @@ export default function Navbar() {
     setIsClient(true)
   }, [])
 
-  if(!isClient) return <div></div>;
-  
+  if (!isClient) return <div className="w-full h-24"></div>;
+
   return (
-    <nav className="bg-gradient-to-r from-white via-amber-50/30 to-orange-50/20 shadow-xl border-b-2 border-gradient-amber sticky top-0 left-0 right-0 z-[60] backdrop-blur-sm">
+    <nav className="bg-gradient-to-r from-white via-amber-50/30 to-orange-50/20 shadow-xl border-b-2 border-gradient-amber sticky top-0 left-0 right-0 z-50 backdrop-blur-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-3 md:py-5">
           {/* Logo */}
@@ -57,20 +60,63 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <button
-              aria-label="Shopping Cart" 
-              className="p-2 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-full transition-all duration-300 group relative">
-              <ShoppingBag className="w-5 h-5 text-gray-700 group-hover:text-amber-600" />
-              <span className="absolute -top-1 -right-1 badge-gradient text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                2
-              </span>
-            </button>
+            {
+              user && <button
+                onClick={() => { setShowCart(true) }}
+                aria-label="Shopping Cart"
+                className="p-2 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-full transition-all duration-300 group relative">
+                <ShoppingBag className="w-5 h-5 text-gray-700 group-hover:text-amber-600" />
+                {
+                  cart && cart.products && cart.products.length > 0 && <span className="absolute -top-1 -right-1 badge-gradient text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cart.products.length}
+                  </span>
+                }
+              </button>
+            }
 
-            <button 
-              aria-label="User Account"
-              className="p-2 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-full transition-all duration-300 group">
-              <User className="w-5 h-5 text-gray-700 group-hover:text-amber-600" />
-            </button>
+            {
+              user &&
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    aria-label="User Account"
+                    className="p-2 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-full transition-all duration-300 group">
+                    <User className="w-5 h-5 text-gray-700 group-hover:text-amber-600" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-gradient-to-br from-white to-amber-50/90 shadow-2xl" align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel className="font-normal">{user.name} ( {user.email} )</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <a target="_blank" href="https://github.com/siddhant-deshmukh/ecommerce-next-js-chat-bot">
+                    <DropdownMenuItem>
+                      GitHub
+                    </DropdownMenuItem>
+                  </a>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => { logout() }}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            }
+            {
+              !user && !authLoading && <Button
+                onClick={() => { setShowAuth(true) }}
+                size="sm"
+                className="px-4 py-2 text-gray-600 border bg-white hover:bg-gray-100 border-gray-400 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                Log In
+              </Button>
+            }
+            {
+              !user && authLoading && <Button
+                onClick={() => { setShowAuth(true) }}
+                size="sm"
+                className="h-8 w-18 text-gray-600 border bg-gray-100 animate-pulse border-gray-100 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+              </Button>
+            }
 
             <Button
               size="sm"
@@ -112,24 +158,7 @@ export default function Navbar() {
               {/* Mobile Actions */}
               <div className="pt-4 space-y-4">
                 <div className="flex items-center justify-around">
-                  <button 
-                    aria-label="Search - Mobile Action"
-                    className="flex flex-col items-center space-y-1 p-3 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-xl transition-all duration-300">
-                    <Search className="w-5 h-5 text-gray-700" />
-                    <span className="text-xs text-gray-600">Search</span>
-                  </button>
-
-                  <button 
-                    aria-label="Whichlist - Mobile Action"
-                    className="flex flex-col items-center space-y-1 p-3 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-xl transition-all duration-300 relative">
-                    <Heart className="w-5 h-5 text-gray-700" />
-                    <span className="text-xs text-gray-600">Wishlist</span>
-                    <span className="absolute top-1 right-1 badge-gradient text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                      3
-                    </span>
-                  </button>
-
-                  <button 
+                  <button
                     aria-label="Cart - Mobile Action"
                     className="flex flex-col items-center space-y-1 p-3 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-xl transition-all duration-300 relative">
                     <ShoppingBag className="w-5 h-5 text-gray-700" />
@@ -139,7 +168,7 @@ export default function Navbar() {
                     </span>
                   </button>
 
-                  <button 
+                  <button
                     className="flex flex-col items-center space-y-1 p-3 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-xl transition-all duration-300">
                     <User className="w-5 h-5 text-gray-700" />
                     <span className="text-xs text-gray-600">Account</span>
@@ -160,6 +189,8 @@ export default function Navbar() {
         )}
       </div>
 
+
+      {/* <ConfirmationPopup /> */}
       {/* <div className="hidden md:block badge-gradient text-center py-2 text-sm">
         <div className="container mx-auto px-4">
           <span className="font-medium">

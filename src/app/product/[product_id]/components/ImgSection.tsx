@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function ProductImgGallery({ images }: { images: string[] }) {
   const [mainImage, setMainImage] = useState(0)
@@ -15,8 +15,15 @@ export default function ProductImgGallery({ images }: { images: string[] }) {
     setMainImage((prev) => (prev === 0 ? images.length - 1 : prev - 1))
   }
 
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  if (!isClient) return <div className="w-full h-14"></div>;
+
   return (
-    <div className="w-full lg:w-1/2 static lg:sticky top-24 self-start">
+    <>
       {/* Main Image */}
       <div className="relative bg-gradient-to-br from-white to-amber-50/50 rounded-2xl shadow-xl border-gradient p-6 aspect-square">
         <Image
@@ -65,6 +72,6 @@ export default function ProductImgGallery({ images }: { images: string[] }) {
           </button>
         ))}
       </div>
-    </div>
+    </>
   )
 }
