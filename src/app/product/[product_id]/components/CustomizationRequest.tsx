@@ -4,8 +4,9 @@ import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react"
 import { Send, Settings, Shield, Sparkles } from "lucide-react"
 import { post } from "@/lib/apiCallClient";
 import { Spinner } from "@/components/ui/spinner";
+import { IProduct } from "@/models";
 
-export default function CustomizationRequest() {
+export default function CustomizationRequest({ product }: { product: IProduct }) {
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -48,11 +49,7 @@ export default function CustomizationRequest() {
     setMsgLoading(true);
     post('/api/customisation-chat', {
       chatId: chatIdRef.current,
-      product: {
-        "name": "Radiant Solitaire Diamond Ring",
-        "desc": "18K White Gold | 1.5 Carat Diamond",
-        "tagline": "Elevate your special moments with our exquisite Radiant Solitaire Diamond Ring. This stunning piece features a brilliant 1.5 carat diamond set in luxurious 18K white gold, creating a timeless symbol of elegance and love."
-      },
+      product,
       messages: messages.slice(2, -1).map(ele => { return { role: ele.sender, content: ele.text } }),
       newMessage: newMessage.text
     }).then((res) => {
@@ -69,7 +66,7 @@ export default function CustomizationRequest() {
         setMessages((prev) => [...prev, response]);
       }
     }).catch((err) => {
-      if(err && err.data) {
+      if (err && err.data) {
         const response = {
           id: messages.length + 2,
           text: err.data.msg,
@@ -139,15 +136,14 @@ export default function CustomizationRequest() {
             <div key={message.id}>
               <div className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[80%] p-4 rounded-2xl ${message.type == 'error' ? `bg-red-100 text-red-950`:(
+                  className={`max-w-[80%] p-4 rounded-2xl ${message.type == 'error' ? `bg-red-100 text-red-950` : (
                     message.sender === "user"
-                    ? "badge-gradient"
-                    : "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200"
+                      ? "badge-gradient"
+                      : "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200"
                   )}`}
                 >
                   <p className="text-sm leading-relaxed">{message.text}</p>
-                  <p className={`text-xs mt-2 ${
-                    message.type == 'error' ? 'text-red-800' : (
+                  <p className={`text-xs mt-2 ${message.type == 'error' ? 'text-red-800' : (
                       message.sender === "user" ? "text-white/80" : "text-gray-500"
                     )}`}>
                     {message.timestamp}

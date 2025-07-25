@@ -238,7 +238,7 @@ export default async function ProductDetail({ params }: ProductPageProps) {
               </div>
             </div>
 
-            <CustomizationRequest />
+            <CustomizationRequest product={product} />
           </div>
         </div>
 

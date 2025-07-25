@@ -6,7 +6,7 @@ export default function Testimonials() {
     {
       name: "Sarah Johnson",
       role: "Bride",
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
+      image: "/user/1.webp",
       rating: 5,
       text: "The diamond ring I purchased for my engagement was absolutely perfect. The craftsmanship is exceptional and the customer service was outstanding. I couldn't be happier with my choice!",
       product: "Diamond Engagement Ring",
@@ -14,7 +14,7 @@ export default function Testimonials() {
     {
       name: "Michael Chen",
       role: "Anniversary Gift",
-      image: "https://randomuser.me/api/portraits/women/45.jpg",
+      image: "/user/2.webp",
       rating: 5,
       text: "I bought a beautiful gold necklace for my wife's anniversary. The quality exceeded my expectations and she absolutely loves it. Will definitely shop here again!",
       product: "Gold Anniversary Necklace",
@@ -22,7 +22,7 @@ export default function Testimonials() {
     {
       name: "Emily Rodriguez",
       role: "Jewelry Collector",
-      image: "https://randomuser.me/api/portraits/men/78.jpg",
+      image: "/user/3.webp",
       rating: 4,
       text: "As someone who collects vintage jewelry, I'm very particular about quality. This store has the most beautiful vintage pieces I've ever seen. Truly exceptional!",
       product: "Vintage Pearl Set",
@@ -30,7 +30,7 @@ export default function Testimonials() {
     {
       name: "David Thompson",
       role: "Gift Buyer",
-      image: "https://randomuser.me/api/portraits/women/12.jpg",
+      image: "/user/4.webp",
       rating: 5,
       text: "Purchased earrings for my daughter's graduation. The packaging was elegant and the jewelry was even more beautiful in person. Highly recommended!",
       product: "Pearl Graduation Earrings",
@@ -38,7 +38,7 @@ export default function Testimonials() {
     {
       name: "Lisa Wang",
       role: "Bridal Party",
-      image: "https://randomuser.me/api/portraits/men/5.jpg",
+      image: "/user/5.webp",
       rating: 5,
       text: "Ordered matching bracelets for my entire bridal party. Each piece was perfectly crafted and arrived on time. The girls absolutely loved them!",
       product: "Bridal Party Bracelet Set",
@@ -46,7 +46,7 @@ export default function Testimonials() {
     {
       name: "James Wilson",
       role: "Luxury Shopper",
-      image: "https://randomuser.me/api/portraits/women/34.jpg",
+      image: "/user/1.webp",
       rating: 4,
       text: "The luxury collection here is unmatched. I've purchased several pieces and each one has been a masterpiece. The attention to detail is remarkable.",
       product: "Luxury Diamond Collection",
