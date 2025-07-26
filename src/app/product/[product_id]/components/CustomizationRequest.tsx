@@ -131,7 +131,7 @@ export default function CustomizationRequest({ product }: { product: IProduct })
           </div>
         </div>
 
-        <div ref={scrollRef} className="h-96 p-6 overflow-y-auto space-y-4 bg-gradient-to-b from-white to-amber-50/30 chat-scroll-area">
+        <div ref={scrollRef} className="h-96 p-3 sm:p-6 overflow-y-auto space-y-4 bg-gradient-to-b from-white to-amber-50/30 chat-scroll-area">
           {messages.map((message) => (
             <div key={message.id}>
               <div className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
@@ -180,7 +180,7 @@ export default function CustomizationRequest({ product }: { product: IProduct })
         </div>
 
         {/* Input Area */}
-        <div className="p-6 border-t border-amber-200 bg-gradient-to-r from-white to-amber-50/50">
+        <div className="p-3 sm:p-6 border-t border-amber-200 bg-gradient-to-r from-white to-amber-50/50">
           <div className="flex gap-3">
             <input
               type="text"
@@ -188,15 +188,15 @@ export default function CustomizationRequest({ product }: { product: IProduct })
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Describe your customization ideas..."
-              className="flex-1 px-4 py-3 border-2 border-amber-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors duration-300 bg-white text-gray-800 placeholder-gray-500"
+              className="flex-1 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border-2 border-amber-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors duration-300 bg-white text-gray-800 placeholder-gray-500"
             />
             <button
               onClick={() => { sendMessage(inputMessage) }}
               disabled={!inputMessage.trim()}
-              className="px-6 py-3 badge-gradient hover:from-amber-600 hover:to-orange-600 disabled:from-gray-300 disabled:to-gray-400 rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
+              className="px-4 sm:px-6 py-3 badge-gradient hover:from-amber-600 hover:to-orange-600 disabled:from-gray-300 disabled:to-gray-400 rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
             >
               <Send className="w-4 h-4" />
-              Send
+              <span className="hidden sm:block">Send</span>
             </button>
           </div>
 
@@ -232,7 +232,7 @@ export default function CustomizationRequest({ product }: { product: IProduct })
 
       {/* Customization Benefits */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="text-center p-6 bg-gradient-to-br from-white to-amber-50 rounded-xl border border-amber-200 shadow-lg">
+        <div className="text-center p-3 sm:p-6 bg-gradient-to-br from-white to-amber-50 rounded-xl border border-amber-200 shadow-lg">
           <div className="w-12 h-12 badge-gradient rounded-full flex items-center justify-center mx-auto mb-4">
             <Settings className="w-6 h-6" />
           </div>
@@ -240,7 +240,7 @@ export default function CustomizationRequest({ product }: { product: IProduct })
           <p className="text-sm text-gray-600">Our master jewelers will craft your vision with precision and care</p>
         </div>
 
-        <div className="text-center p-6 bg-gradient-to-br from-white to-orange-50 rounded-xl border border-orange-200 shadow-lg">
+        <div className="text-center p-3 sm:p-6 bg-gradient-to-br from-white to-orange-50 rounded-xl border border-orange-200 shadow-lg">
           <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
@@ -248,7 +248,7 @@ export default function CustomizationRequest({ product }: { product: IProduct })
           <p className="text-sm text-gray-600">See your custom design in 3D before we begin crafting</p>
         </div>
 
-        <div className="text-center p-6 bg-gradient-to-br from-white to-yellow-50 rounded-xl border border-yellow-200 shadow-lg">
+        <div className="text-center p-3 sm:p-6 bg-gradient-to-br from-white to-yellow-50 rounded-xl border border-yellow-200 shadow-lg">
           <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-6 h-6 text-white" />
           </div>

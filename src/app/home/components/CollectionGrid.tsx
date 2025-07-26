@@ -1,9 +1,10 @@
 "use client";
 
+import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button"
 import { useApp } from "@/context/AppContext";
 import { get } from "@/lib/apiCallClient";
-import { ProductType } from "@/models";
+import { IProduct, ProductType } from "@/models";
 import { ArrowRight, Heart, ShoppingBag, Sparkles } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link";
@@ -15,9 +16,7 @@ export default function CollectionsGrid() {
 
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [products, setProducts] = useState<(ProductType & {
-    _id: string, current_price: number, discount_percentage: number
-  })[]>([]);
+  const [products, setProducts] = useState<(IProduct)[]>([]);
 
   useEffect(() => {
     setLoading(true)
@@ -39,7 +38,7 @@ export default function CollectionsGrid() {
 
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-white via-orange-50/20 to-amber-50/30 overflow-hidden">
+    <section id="collections" className="relative py-20 bg-gradient-to-br from-white via-orange-50/20 to-amber-50/30 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-amber-200/30 to-orange-200/30 rounded-full blur-2xl"></div>
       <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-br from-orange-200/30 to-yellow-200/30 rounded-full blur-2xl"></div>
@@ -67,97 +66,10 @@ export default function CollectionsGrid() {
 
         {/* products Grid */}
         <div className="grid grid-cols-1 grid-rows-3 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {!loading && products.slice(0, 9).map((product, index) => {
+          {!loading && products.slice(0, 9).map((product) => {
             const adddedToCart = cart?.products.find(ele => ele.product_id.toString() == product._id);
 
-            return (
-              <div
-                key={index}
-                className={`relative bg-gradient-to-br from-white to-amber-50/50 flex flex-col rounded-2xl shadow-xl border-gradient-amber overflow-hidden transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl ${product.isFeatured ? "lg:col-span-1 lg:row-span-1" : ""
-                  }`}
-              >
-                <Link href={`/product/${product._id}`} className="group">
-                  {/* Featured Badge */}
-                  {product.isFeatured && (
-                    <div className="absolute top-4 right-4 z-20 badge-gradient px-3 py-1 rounded-full text-xs font-semibold">
-                      Featured
-                    </div>
-                  )}
-
-                  {/* Image Container */}
-                  {/* [900px] */}
-                  <div className={`relative overflow-hidden ${product.isFeatured ? "h-64" : "h-64"}`}>
-                    <Image
-                      src={product.main_image || "/placeholder.svg"}
-                      alt={product.title}
-                      width={300}
-                      height={product.isFeatured ? 600 : 300}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-bold text-black  transition-colors duration-300">
-                        {product.title}
-                      </h3>
-                      {/* <span className="text-sm bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent font-semibold">
-                    {product.itemCount}
-                  </span> */}
-                    </div>
-
-                    <p className="text-gray-600 mb-4 leading-relaxed line-clamp-2">
-                      {product.description}</p>
-                    <div className="flex items-center gap-4">
-                      <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                        ₹{product.current_price.toLocaleString()}
-                      </span>
-                      <span className="text-base md:text-lg text-gray-500 line-through">₹{product.price.toLocaleString()}</span>
-                      {
-                        (product.discount_percentage > 0) &&
-                        <span className="badge-gradient px-2 py-1 rounded text-xs lg:text-sm font-medium">
-                          Save {product.discount_percentage}%
-                        </span>
-                      }
-                    </div>
-                  </div>
-                  <div className="mt-auto px-6 pb-6">
-                    <div className="flex items-center gap-3">
-                      <Button
-                        size="lg"
-                        className="flex-1 items-center btn-gradient py-6 text-sm lg:text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                      >
-                        <ShoppingBag className="w-5 h-5" />
-                        <span>{ adddedToCart ? 'Remove from' : 'Add to'} Cart</span>
-                      </Button>
-                      <Button
-                        size="lg"
-                        className="flex-1 bg-gradient-to-r from-gray-800 via-black to-gray-900 hover:from-black hover:via-gray-900 hover:to-black text-white py-6 text-sm lg:text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                      >
-                        Buy Now
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="aspect-square p-6 border-2 border-none transition-all duration-300 bg-transparent"
-                      >
-                        <div className="w-6 h-6 group-hover:fill-amber-500 text-amber-500" />
-                      </Button>
-                    </div>
-                  </div>
-                </Link>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute bottom-6 w-[50px] right-6 aspect-square py-6 border-2 border-amber-200 hover:border-amber-500 text-amber-600 group hover:bg-amber-50 transition-all duration-300 bg-transparent"
-                >
-                  <Heart className="w-6 h-6 group-hover:fill-amber-500 text-amber-500" />
-                </Button>
-              </div>
-            )
+            return <ProductCard key={product._id} product={product} adddedToCart={adddedToCart ? true : false} />
           })}
           {
             loading && Array.from({ length: 9 }).map((_, ele) => {
