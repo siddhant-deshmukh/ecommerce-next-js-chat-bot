@@ -129,6 +129,19 @@ export default function Navbar() {
           </div>
 
           <div className="md:hidden">
+            {
+              user && <button
+                onClick={() => { setShowCart(true) }}
+                aria-label="Shopping Cart"
+                className="p-2 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-full transition-all duration-300 group relative">
+                <ShoppingBag className="w-5 h-5 text-gray-700 group-hover:text-amber-600" />
+                {
+                  cart && cart.products && cart.products.length > 0 && <span className="absolute -top-1 -right-1 badge-gradient text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cart.products.length}
+                  </span>
+                }
+              </button>
+            }
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Dropdown Menu"
@@ -158,31 +171,32 @@ export default function Navbar() {
               {/* Mobile Actions */}
               <div className="pt-4 space-y-4">
                 <div className="flex items-center justify-around">
-                  <button
-                    aria-label="Cart - Mobile Action"
-                    className="flex flex-col items-center space-y-1 p-3 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-xl transition-all duration-300 relative">
-                    <ShoppingBag className="w-5 h-5 text-gray-700" />
-                    <span className="text-xs text-gray-600">Cart</span>
-                    <span className="absolute top-1 right-1 badge-gradient text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                      2
-                    </span>
-                  </button>
-
-                  <button
+                  {/* <button
                     className="flex flex-col items-center space-y-1 p-3 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 rounded-xl transition-all duration-300">
                     <User className="w-5 h-5 text-gray-700" />
                     <span className="text-xs text-gray-600">Account</span>
-                  </button>
+                  </button> */}
                 </div>
 
-                <Button
-                  size="lg"
-                  aria-label="Call Now - Mobile Action"
-                  className="w-full btn-gradient py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Phone className="w-4 h-4 mr-2" />
-                  Call Us Now
-                </Button>
+                {
+                  !user && !authLoading && <Button
+                    onClick={() => { setShowAuth(true) }}
+                    size="lg"
+                    className="w-full font-semibold text-gray-600 bg-white hover:bg-gray-100 border-gray-400  py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    Log In
+                  </Button>
+                }
+                <div className="flex gap-2 justify-content-between">
+                  <Button
+                    size="lg"
+                    aria-label="Call Now - Mobile Action"
+                    className="w-full btn-gradient py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call Us Now
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

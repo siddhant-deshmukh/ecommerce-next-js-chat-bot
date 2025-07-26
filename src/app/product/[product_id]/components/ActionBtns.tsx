@@ -87,7 +87,7 @@ export default function ActionBts({ product }: { product: IProduct }) {
       {!adddedToCart?.quantity && <SelectQuantity onQuantityChange={onQuantityChange} quantity={quantity} />}
       {adddedToCart?.quantity && <SelectQuantity onQuantityChange={onQuantityChange} quantity={adddedToCart?.quantity} />}
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="flex flex-row flex-wrap sm:flex-nowrap items-center gap-4">
         <Button
           size="lg"
           disabled={cartLoading}

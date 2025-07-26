@@ -31,7 +31,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <div className="relative container mx-auto px-4 py-12 lg:py-20">
+      <div className="relative container mx-auto px-4 py-6 xl:py-14">
         <div className="grid gap-8 grid-cols-1 lg:grid-cols-2 lg:gap-16 items-center min-h-[80vh]">
           {/* Text Content */}
           <div className="flex flex-col mr-2 sm:mr-0 justify-center space-y-8 text-center lg:text-left">

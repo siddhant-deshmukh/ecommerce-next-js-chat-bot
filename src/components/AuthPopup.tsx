@@ -56,19 +56,19 @@ export function AuthPopup() {
       <DialogContent className="sm:max-w-lg border-0 shadow-2xl bg-white rounded-2xl overflow-hidden" showCloseButton={false}>
         {/* Header with gradient background */}
         <div className="px-6 pb-5 text-center text-black">
-          <DialogTitle className="text-2xl font-bold mb-2 flex justify-center space-x-2">
+          <DialogTitle className="text-lg sm:text-2xl  font-bold mb-2 flex justify-center space-x-2">
             <span>Welcome to </span>
-            <div className="text-base sm:text-2xl font-bold">
+            <div className="font-bold">
               <span className="text-black">Luxury</span>
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                 Gems
               </span>
             </div>
           </DialogTitle>
-          <p className="text-amber-600">Your premium jewelry destination</p>
+          <p className="text-xs sm:text-base text-amber-600">Your premium jewelry destination</p>
         </div>
 
-        <div className="px-6 pb-6">
+        <div className="px-1 pb-1 md:px-6 md:pb-6">
           <Tabs defaultValue="login" className="w-full" onValueChange={(value)=> { setActiveTab(value) }}>
             <TabsList className="grid w-full grid-cols-2 bg-gray-100 rounded-xl p-1 mb-6">
               <TabsTrigger

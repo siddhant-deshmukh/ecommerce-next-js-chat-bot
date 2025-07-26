@@ -64,6 +64,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [setAuthLoading]);
 
   const addToCart = useCallback(async (quantity: number, selectedSize: number | null, product: IProduct) => {
+    if(!user) {
+      setShowAuth(true);
+      return;
+    }
     if (!selectedSize) {
       toast.warning('Select a Size');
       return;
@@ -86,10 +90,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     if (res && res.cart)
       setCart(res.cart);
     return res.cart;
-  }, [cart, setCart]);
+  }, [user, cart, setCart]);
 
   const updateCart = useCallback(async (quantity: number | null, selectedSize: number | null, product_id: string) => {
-   
+    if(!user) {
+      setShowAuth(true);
+      return;
+    }
     let newCart: any = { products: [] };
     if (cart?.products && Array.isArray(cart.products)) newCart.products = cart.products.map((ele)=> {
       if(ele.product_id.toString() == product_id) {
@@ -106,9 +113,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     if (res && res.cart)
       setCart(res.cart);
     return res.cart;
-  }, [cart, setCart]);
+  }, [user, cart, setCart]);
 
   const deleteCart = useCallback(async (product_id: string) => {
+    if(!user) {
+      setShowAuth(true);
+      return;
+    }
     let newCart: any = { products: [] };
     if (cart?.products && Array.isArray(cart.products)) newCart.products = cart.products.filter((ele)=> {
       if(ele.product_id.toString() == product_id) {
@@ -121,7 +132,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     if (res && res.cart)
       setCart(res.cart);
     return res.cart;
-  }, [cart, setCart]);
+  }, [user, cart, setCart]);
 
   const logout = () => {
     post('/api/auth/logout')
