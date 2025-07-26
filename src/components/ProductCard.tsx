@@ -1,11 +1,20 @@
+"use client";
+
 import { IProduct } from "@/models";
 import { Heart, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
+import { useApp } from "@/context/AppContext";
 
 function ProductCard({ product, adddedToCart }: { product: IProduct, adddedToCart: boolean }) {
+
+  const router = useRouter();
+  const { deleteCart } = useApp();
+
+
   return (
     <div
       className={`relative bg-gradient-to-br from-white to-amber-50/50 flex flex-col rounded-2xl shadow-xl border-gradient-amber overflow-hidden transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl ${product.isFeatured ? "lg:col-span-1 lg:row-span-1" : ""
@@ -62,6 +71,10 @@ function ProductCard({ product, adddedToCart }: { product: IProduct, adddedToCar
         <div className="flex items-center gap-3">
           <Button
             size="lg"
+            onClick={()=> {
+              if(adddedToCart) deleteCart(product._id);
+              else router.push(`/product/${product._id}`);
+            }}
             className="flex-1 items-center btn-gradient py-6 text-sm lg:text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
           >
             <ShoppingBag className="w-5 h-5" />
@@ -69,6 +82,9 @@ function ProductCard({ product, adddedToCart }: { product: IProduct, adddedToCar
           </Button>
           <Button
             size="lg"
+            onClick={()=> {
+             router.push(`/product/${product._id}`);
+            }}
             className="flex-1 bg-gradient-to-r from-gray-800 via-black to-gray-900 hover:from-black hover:via-gray-900 hover:to-black text-white py-6 text-sm lg:text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
           >
             Buy Now
