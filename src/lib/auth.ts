@@ -1,6 +1,7 @@
 import Cart from '@/models/Cart';
 import * as jwt from 'jsonwebtoken';
 import { Types } from 'mongoose';
+import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 
 export const createToken = (user_id: string) => {
@@ -11,9 +12,9 @@ export const verifyToken = (token: string): { user_id: string } => {
   return jwt.verify(token, process.env.JWT_SECRET!) as { user_id: string };
 };
 
-export const getTokenUserId = (request: NextRequest): string | null => {
+export const getTokenUserId = async () => {
   try {
-    const token = request.cookies.get('token')?.value;
+    const token = (await cookies()).get('token')?.value;
     if (!token) return null;
 
     const { user_id } = verifyToken(token);

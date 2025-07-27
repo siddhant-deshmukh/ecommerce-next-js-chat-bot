@@ -1,6 +1,6 @@
 'use client'
 
-import { get, post, put } from "@/lib/apiCallClient";
+import { del, get, post, put } from "@/lib/apiCallClient";
 import { CartProductSubDocument, CartType, ICart, IProduct, ProductType, UserType } from "@/models";
 import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -21,7 +21,8 @@ export const AuthContext = createContext<{
   setCart: Dispatch<SetStateAction<ICart | null>>,
   addToCart: (quantity: number, selectedSize: number | null, product: IProduct) => Promise<any>,
   updateCart: (quantity: number | null, selectedSize: number | null, product_id: string) => Promise<any>,
-  deleteCart: (product_id: string) => Promise<any>
+  deleteCart: (product_id: string) => Promise<any>,
+  addWishlist: (product_id: string, remove?: boolean) => Promise<void | boolean>
 }>({
   user: null,
   cart: null,
@@ -39,6 +40,7 @@ export const AuthContext = createContext<{
   addToCart: async () => { },
   updateCart: async () => { },
   deleteCart: async () => { },
+  addWishlist: async () => { },
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -134,6 +136,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     return res.cart;
   }, [user, cart, setCart]);
 
+  const addWishlist = useCallback(async (product_id: string, remove: boolean = false) => {
+    if(!user) {
+      setShowAuth(true);
+      return false;
+    }
+    if(remove) {
+      const res = await del(`/api/wishlist?product_id=${product_id}`, { });
+    } else {
+      const res = await post(`/api/wishlist?product_id=${product_id}`, {  });
+    }
+  }, [user, cart, setCart]);
+
+
   const logout = () => {
     post('/api/auth/logout')
       .then(res => {
@@ -157,6 +172,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     addToCart,
     updateCart,
     deleteCart,
+    addWishlist,
   }}>{children}</AuthContext.Provider>;
 };
 

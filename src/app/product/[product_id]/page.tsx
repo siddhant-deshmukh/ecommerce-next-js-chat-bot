@@ -16,16 +16,58 @@ import { Types } from "mongoose"
 import { IProduct } from "@/models"
 import ActionBts from "./components/ActionBtns"
 import { cache } from "react"
+import { getTokenUserId } from "@/lib/auth"
 
 interface ProductPageProps {
   params: Promise<{ product_id: string }>;
 }
 
-const getProduct = cache(async (product_id: string) => {
+const getProduct = cache(async (product_id: string, user_id?: string | null) => {
   await dbConnect.connect();
 
   const products = await Product.aggregate([
     { $match: { _id: new Types.ObjectId(product_id) } },
+
+    ...(user_id ? [
+      {
+        $lookup: {
+          from: 'wishlists',
+          let: { productId: '$_id' }, // Define a variable for the current product's _id
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$product_id', '$$productId'] }, // Match product_id from the outer document
+                    { $eq: ['$user_id', new Types.ObjectId(user_id)] }             // Match the specific user_id
+                  ]
+                }
+              }
+            },
+            { $project: { _id: 1 } } // Only project _id if you don't need other wishlist fields
+          ],
+          as: 'userWishlistEntry', // This array will now only contain the entry for the specific user (or be empty)
+        }
+      },
+      {
+        $addFields: {
+          // Check if the 'userWishlistEntry' array has any elements
+          liked: {
+            $gt: [{ $size: '$userWishlistEntry' }, 0]
+          },
+          // Keep your existing active_discount logic
+          active_discount: {
+            $ifNull: [{ $arrayElemAt: ['$active_discount', 0] }, {}]
+          }
+        }
+      },
+      // {
+      //   $project: {
+      //     userWishlistEntry: 0, // Remove the intermediate field from the final output
+      //   }
+      // },
+    ] : []),
+
     {
       $lookup: {
         from: 'productspecifications',
@@ -107,7 +149,7 @@ const getProduct = cache(async (product_id: string) => {
   return product
 })
 
-export async function generateMetadata({ params } : ProductPageProps ) {
+export async function generateMetadata({ params }: ProductPageProps) {
   const { product_id } = await params;
   const product = await getProduct(product_id);
   return { title: product.title };
@@ -116,9 +158,9 @@ export async function generateMetadata({ params } : ProductPageProps ) {
 export default async function ProductDetail({ params }: ProductPageProps) {
   const { product_id } = await params;
 
+  const user_id = await getTokenUserId();
 
-  
-  const product = await getProduct(product_id)
+  const product = await getProduct(product_id, user_id)
 
   const features = [
     "Handcrafted by master jewelers",
@@ -187,7 +229,7 @@ export default async function ProductDetail({ params }: ProductPageProps) {
 
             <div className="border-t border-gray-200"></div>
 
-            <div className="space-y-6">              
+            <div className="space-y-6">
               <ActionBts product={product} />
             </div>
 

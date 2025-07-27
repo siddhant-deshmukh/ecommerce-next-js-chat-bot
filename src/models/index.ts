@@ -46,6 +46,8 @@ export interface IProduct {
   available_size: number[],
   price: number,
 
+  liked: boolean,
+
   avg_rating: number,
   total_number_reviews: number,
   tags: string[],

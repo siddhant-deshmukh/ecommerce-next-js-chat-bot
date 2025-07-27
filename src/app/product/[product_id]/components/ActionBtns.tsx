@@ -8,10 +8,10 @@ import SelectQuantity from "./SelectQuantity";
 import { useApp } from "@/context/AppContext";
 
 export default function ActionBts({ product }: { product: IProduct }) {
-  const { cart, updateCart, addToCart, deleteCart } = useApp();
+  const { cart, updateCart, addToCart, deleteCart, addWishlist } = useApp();
   const [isClient, setIsClient] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  
+
   useEffect(() => {
     setIsClient(true)
   }, []);
@@ -20,6 +20,12 @@ export default function ActionBts({ product }: { product: IProduct }) {
   const [quantity, setQuantity] = useState<number>(adddedToCart?.quantity ? adddedToCart?.quantity : 1);
   const [selectedSize, setSelectedSize] = useState<number | null>(adddedToCart?.size ? adddedToCart?.size : null);
 
+  const [inWishlist, setInWishList] = useState<boolean>(product.liked);
+
+  const toggleWishList = (remove: boolean) => {
+    setInWishList(remove);
+    addWishlist(product._id, !remove);
+  }
 
   const changeCartAction = async () => {
     setCartLoading(true);
@@ -107,9 +113,10 @@ export default function ActionBts({ product }: { product: IProduct }) {
         <Button
           variant="outline"
           size="icon"
-          className="w-14 h-14 border-2 border-amber-200 hover:border-amber-500 text-amber-600 hover:bg-amber-50 transition-all duration-300 bg-transparent"
+          onClick={()=> { toggleWishList(!inWishlist) }}
+          className={`w-14 h-14 border-2 border-amber-200 hover:border-amber-500 text-amber-600 hover:bg-amber-50 transition-all duration-300 ${inWishlist ? 'bg-amber-100' : 'bg-transparent'}`}
         >
-          <Heart className="w-6 h-6" />
+          <Heart className={`w-6 h-6 text-amber-600 ${inWishlist ? 'fill-amber-500' : 'fill-none'}`} />
         </Button>
         <Button
           variant="outline"

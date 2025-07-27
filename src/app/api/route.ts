@@ -1,12 +1,13 @@
-import { getCart, getTokenUserId } from "@/lib/auth";
-import Cart from "@/models/Cart";
-import User from "@/models/User";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
+import Cart from "@/models/Cart";
+import User from "@/models/User";
+import { getCart, getTokenUserId } from "@/lib/auth";
+
 export async function GET(req: NextRequest) {
   try {
-    const user_id = getTokenUserId(req);
+    const user_id = await getTokenUserId();
 
     if (!user_id) {
       return NextResponse.json({ msg: 'Session Expired. Login.' }, { status: 401 });
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const user_id = getTokenUserId(req);
+    const user_id = await getTokenUserId();
     const updated_cart = await req.json();
   
     if (!user_id) {

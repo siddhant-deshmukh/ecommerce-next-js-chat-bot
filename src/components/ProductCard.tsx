@@ -1,19 +1,31 @@
 "use client";
 
-import { IProduct } from "@/models";
-import { Heart, ShoppingBag } from "lucide-react";
-import Image from "next/image";
-import { Button } from "./ui/button";
+import React, { useState } from "react";
 import Link from "next/link";
-import React from "react";
+import Image from "next/image";
+import { Heart, ShoppingBag } from "lucide-react";
+
+import { IProduct } from "@/models";
+import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 
 function ProductCard({ product, adddedToCart }: { product: IProduct, adddedToCart: boolean }) {
 
   const router = useRouter();
-  const { deleteCart } = useApp();
+  const { deleteCart, addWishlist } = useApp();
 
+  const [inWishlist, setInWishList] = useState<boolean>(product.liked);
+
+  const toggleWishList = (remove: boolean) => {
+    addWishlist(product._id, !remove).then((res)=> {
+      if(res == false) {
+
+      } else {
+        setInWishList(remove);
+      }
+    });
+  }
 
   return (
     <div
@@ -92,9 +104,10 @@ function ProductCard({ product, adddedToCart }: { product: IProduct, adddedToCar
           <Button
             variant="outline"
             size="icon"
-            className="aspect-square p-6 border-2  border-amber-200 hover:border-amber-500 text-amber-600 group hover:bg-amber-50 transition-all duration-300 bg-transparent"
+            onClick={()=> { toggleWishList(!inWishlist) }}
+            className={`aspect-square p-6 border-2  border-amber-200 hover:border-amber-500 text-amber-600 group hover:bg-amber-50 transition-all duration-300 ${inWishlist ? 'bg-amber-100' : 'bg-transparent'}`}
           >
-            <Heart className="w-6 h-6 group-hover:fill-amber-500 text-amber-500" />
+            <Heart className={`w-6 h-6 group-hover:fill-amber-500 ${inWishlist ? 'fill-amber-500' : 'fill-none'} text-amber-500`} />
           </Button>
         </div>
       </div>
