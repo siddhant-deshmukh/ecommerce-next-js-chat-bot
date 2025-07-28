@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Menu, X, ShoppingBag, User, Phone, Sparkles } from "lucide-react"
 import { useApp } from "@/context/AppContext"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/context/AuthContext"
 
 export default function Navbar() {
-  const { setShowAuth, setShowCart, logout, user, cart, authLoading } = useApp();
+  const { setShowAuth, setShowCart, logout, user, cart, authLoading } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [

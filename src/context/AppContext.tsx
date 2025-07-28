@@ -1,69 +1,40 @@
 'use client'
 
-import { del, get, post, put } from "@/lib/apiCallClient";
-import { CartProductSubDocument, CartType, ICart, IProduct, ProductType, UserType } from "@/models";
-import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
+
+import { ICart, ICreateOrderProdcut, IProduct, UserType } from "@/models";
+import { useApi } from "@/hooks/useApi";
+import { useAuth } from "./AuthContext";
+import { ICreateOrderProdcutSchema } from "@/models/OrderProduct";
 
 export const AuthContext = createContext<{
-  user: UserType | null,
-  cart: ICart | null,
-  setUser: Dispatch<SetStateAction<UserType | null>>,
-  authLoading: boolean,
-
-  showAuth: boolean,
-  showCart: boolean,
   showConfirmation: boolean,
-  setShowAuth: Dispatch<SetStateAction<boolean>>,
-  setShowCart: Dispatch<SetStateAction<boolean>>,
   setShowConfirmation: Dispatch<SetStateAction<boolean>>,
-  logout: () => void,
-  setCart: Dispatch<SetStateAction<ICart | null>>,
   addToCart: (quantity: number, selectedSize: number | null, product: IProduct) => Promise<any>,
   updateCart: (quantity: number | null, selectedSize: number | null, product_id: string) => Promise<any>,
   deleteCart: (product_id: string) => Promise<any>,
-  addWishlist: (product_id: string, remove?: boolean) => Promise<void | boolean>
+  addWishlist: (product_id: string, remove?: boolean) => Promise<void | boolean>,
+  placeOrder: (product?: ICreateOrderProdcut) => Promise<false | undefined | void>,
 }>({
-  user: null,
-  cart: null,
-  authLoading: false,
-
-  showAuth: false,
-  showCart: false,
   showConfirmation: false,
-  setUser: () => { },
-  setShowAuth: () => { },
-  setShowCart: () => { },
   setShowConfirmation: () => { },
-  logout: () => { },
-  setCart: () => { },
   addToCart: async () => { },
   updateCart: async () => { },
   deleteCart: async () => { },
   addWishlist: async () => { },
+  placeOrder: async () => { },
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
-  const [user, setUser] = useState<UserType | null>(null);
-  const [cart, setCart] = useState<ICart | null>(null);
   const [authLoading, setAuthLoading] = useState<boolean>(false);
 
-  const [showAuth, setShowAuth] = useState(false)
-  const [showCart, setShowCart] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  useEffect(() => {
-    setAuthLoading(true);
-    get('/api')
-      .then(res => {
-        if (res?.user) setUser(res.user);
-        if (res?.cart) setCart(res.cart);
-      })
-      .finally(() => {
-        setAuthLoading(false);
-      });
-  }, [setAuthLoading]);
+  const {del, get, post, put } = useApi();
+
+  const { user, cart, setCart, setShowAuth } = useAuth()
 
   const addToCart = useCallback(async (quantity: number, selectedSize: number | null, product: IProduct) => {
     if(!user) {
@@ -148,31 +119,42 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user, cart, setCart]);
 
-
-  const logout = () => {
-    post('/api/auth/logout')
-      .then(res => {
-        setUser(null);
+  const placeOrder = useCallback(async (product?: ICreateOrderProdcut) => {
+    if(!user) {
+      setShowAuth(true);
+      return false;
+    }
+    if(product) {
+      await post('/api/order/', {
+        action: 'buy_single_product',
+        productDetails: product
+      }).then(()=> {
+        if(cart)
+          setCart({ ...cart, products: cart.products.filter(ele=> !(ele.product_id.toString() == product.product_id && ele.size == product.size)) });
       })
-  }
+    } else {
+      console.log(cart?.products, cart?.products.length);
+      if(!cart || cart.products.length == 0) {
+        toast.warning('Empty Cart. Add Some items');
+        return false;
+      }
+       await post('/api/order/', {
+        action: 'checkout_cart',
+      }).then(()=> {
+        setCart({ ...cart, products: []});
+      })
+    }
+  }, [user, cart, setCart]);
+
 
   return <AuthContext.Provider value={{
-    authLoading,
-    user,
-    cart,
-    showAuth,
-    showCart,
     showConfirmation,
-    setUser,
-    setShowAuth,
-    setCart,
-    setShowCart,
     setShowConfirmation,
-    logout,
     addToCart,
     updateCart,
     deleteCart,
     addWishlist,
+    placeOrder,
   }}>{children}</AuthContext.Provider>;
 };
 

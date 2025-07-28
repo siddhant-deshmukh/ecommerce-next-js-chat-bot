@@ -52,9 +52,9 @@ async function seed() {
       other_images,
       avg_rating,
       total_number_reviews: numberOfReviews,
-      isFeatured: Math.random() < 0.3,
-      isBestSeller: Math.random() < 0.1,
-      isNewArrival: Math.random() < 0.1,
+      is_featured: Math.random() < 0.3,
+      is_best_seller: Math.random() < 0.1,
+      is_new_arrival: Math.random() < 0.1,
     });
 
     // Add fake specs

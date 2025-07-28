@@ -17,9 +17,9 @@ export const ProductSchema = new mongoose.Schema({
 
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
 
-  isFeatured: { type: Boolean, default: false },
-  isBestSeller: { type: Boolean, default: false },
-  isNewArrival: { type: Boolean, default: false },
+  is_featured: { type: Boolean, default: false },
+  is_best_seller: { type: Boolean, default: false },
+  is_new_arrival: { type: Boolean, default: false },
 }, {
   timestamps: true
 });

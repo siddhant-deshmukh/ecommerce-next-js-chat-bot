@@ -2,17 +2,16 @@
 
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button"
-import { useApp } from "@/context/AppContext";
-import { get } from "@/lib/apiCallClient";
-import { IProduct, ProductType } from "@/models";
-import { ArrowRight, Heart, ShoppingBag, Sparkles } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { useApi } from "@/hooks/useApi";
+import { IProduct } from "@/models";
+import { ArrowRight, Sparkles } from "lucide-react"
 import { useEffect, useState } from "react";
 
 export default function CollectionsGrid() {
 
-  const { cart } = useApp();
+  const { cart } = useAuth();
+  const { get } = useApi();
 
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);

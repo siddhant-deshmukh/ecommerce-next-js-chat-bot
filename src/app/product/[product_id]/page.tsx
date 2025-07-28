@@ -28,6 +28,7 @@ const getProduct = cache(async (product_id: string, user_id?: string | null) => 
   const products = await Product.aggregate([
     { $match: { _id: new Types.ObjectId(product_id) } },
 
+    //* Checking if is liked / added in wishlist
     ...(user_id ? [
       {
         $lookup: {
@@ -61,11 +62,41 @@ const getProduct = cache(async (product_id: string, user_id?: string | null) => 
           }
         }
       },
-      // {
-      //   $project: {
-      //     userWishlistEntry: 0, // Remove the intermediate field from the final output
-      //   }
-      // },
+      {
+        $project: {
+          userWishlistEntry: 0, // Remove the intermediate field from the final output
+        }
+      },
+    ] : []),
+
+    //* Add the lastOrder field
+    ...(user_id ? [
+      {
+        $lookup: {
+          from: 'orderproducts',
+          let: { currentProductId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$product_id', '$$currentProductId'] },
+                    { $eq: ['$user_id', new Types.ObjectId(user_id)] }
+                  ]
+                }
+              }
+            },
+            { $sort: { '_id': -1 as const } },
+            { $limit: 1 }         
+          ],
+          as: 'last_order'
+        }
+      },
+      {
+        $addFields: {
+          last_order: { $arrayElemAt: ['$last_order', 0] }
+        }
+      }
     ] : []),
 
     {
@@ -147,7 +178,7 @@ const getProduct = cache(async (product_id: string, user_id?: string | null) => 
 
   const product = JSON.parse(JSON.stringify(product_)) as IProduct;
   return product
-})
+});
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const { product_id } = await params;
@@ -169,6 +200,7 @@ export default async function ProductDetail({ params }: ProductPageProps) {
     "Lifetime warranty",
     "Includes luxury gift packaging",
   ]
+
 
   return (
     <div className="py-12 bg-gradient-to-br from-white via-orange-50/10 to-amber-50/20">

@@ -29,23 +29,23 @@ function ProductCard({ product, adddedToCart }: { product: IProduct, adddedToCar
 
   return (
     <div
-      className={`relative bg-gradient-to-br from-white to-amber-50/50 flex flex-col rounded-2xl shadow-xl border-gradient-amber overflow-hidden transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl ${product.isFeatured ? "lg:col-span-1 lg:row-span-1" : ""
+      className={`relative bg-gradient-to-br from-white to-amber-50/50 flex flex-col rounded-2xl shadow-xl border-gradient-amber overflow-hidden transform hover:cursor-pointer transition-all duration-300 hover:shadow-2xl ${product.is_featured ? "lg:col-span-1 lg:row-span-1" : ""
         }`}
     >
       <Link href={`/product/${product._id}`} className="group">
         {/* Featured Badge */}
-        {product.isFeatured && (
+        {product.is_featured && (
           <div className="absolute top-4 right-4 z-20 badge-gradient px-3 py-1 rounded-full text-xs font-semibold">
             Featured
           </div>
         )}
 
-        <div className={`relative overflow-hidden ${product.isFeatured ? "h-64" : "h-64"}`}>
+        <div className={`relative overflow-hidden ${product.is_featured ? "h-64" : "h-64"}`}>
           <Image
             src={product.main_image || "/placeholder.svg"}
             alt={product.title}
             width={300}
-            height={product.isFeatured ? 600 : 300}
+            height={product.is_featured ? 600 : 300}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>

@@ -8,18 +8,19 @@ import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { useApp } from "@/context/AppContext"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { post } from "@/lib/apiCallClient"
+import { useApi } from "@/hooks/useApi"
+import { useAuth } from "@/context/AuthContext"
 
 
 export function AuthPopup() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login'); 
   const [showPassword, setShowPassword] = useState(false);
-  const { showAuth : open, setShowAuth: onOpenChange, setUser, setCart } = useApp()
-  
+  const { showAuth : open, setShowAuth: onOpenChange, setUser, setCart } = useAuth()
+  const { post } = useApi();
+
   const handleSubmit = useCallback(( e: React.FormEvent<HTMLFormElement>)=> {
     e.preventDefault();
 

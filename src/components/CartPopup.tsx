@@ -10,6 +10,7 @@ import { useApp } from "@/context/AppContext"
 import { formatRelativeTime } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useAuth } from "@/context/AuthContext"
 
 interface CartItem {
   id: number
@@ -25,7 +26,8 @@ interface CartItem {
 
 export function CartPopup() {
 
-  const { cart, setCart, showCart: open, setShowCart: onOpenChange, deleteCart, updateCart } = useApp();
+  const { deleteCart, updateCart, placeOrder } = useApp();
+  const { cart, showCart: open, setShowCart: onOpenChange, setShowCart } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false)
@@ -48,6 +50,12 @@ export function CartPopup() {
     setLoading(true);
     await deleteCart(product_id)
     setLoading(false);
+  }
+  const placeOrderCart = async () => {
+    setLoading(true);
+    await placeOrder();
+    setLoading(false);
+    setShowCart(false);
   }
   
 
@@ -96,7 +104,7 @@ export function CartPopup() {
                   const createdAt = formatRelativeTime(item.created_at as Date)
                   return (
                     <div key={index} className="flex gap-4 p-4 border border-amber-200/50 rounded-lg bg-white/50">
-                      <Link href={`/product/${item._id}`} className="relative w-20 h-20 flex-shrink-0">
+                      <Link onClick={()=> { setShowCart(false) }} href={`/product/${item._id}`} className="relative w-20 h-20 flex-shrink-0">
                         <Image
                           src={item.product.main_image || "/placeholder.svg"}
                           alt={item.product.title}
@@ -106,7 +114,7 @@ export function CartPopup() {
                       </Link>
 
                       <div className="flex-1 min-w-0">
-                        <Link href={`/product/${item.product_id}`}>
+                        <Link onClick={()=> { setShowCart(false) }}  href={`/product/${item.product_id}`}>
                           <h4 className="font-semibold text-gray-900 truncate">{item.product.title}</h4>
                           <p className="text-sm text-gray-600 line-clamp-2 mb-2">{item.product.description}</p>
 
@@ -191,7 +199,7 @@ export function CartPopup() {
               <div className="space-y-2">
                 <Button
                   onClick={() => {
-
+                    placeOrderCart()
                   }}
                   className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-3"
                   size="lg"

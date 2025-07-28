@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const user_id = await getTokenUserId();
 
     const products = await Product.aggregate([
-      { $sort: { isFeatured: -1, isBestSeller: -1, avg_rating: -1 } },
+      { $sort: { is_featured: -1, is_best_seller: -1, avg_rating: -1 } },
 
       ...(user_id ? [
         {

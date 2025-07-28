@@ -1,24 +1,41 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { IProduct } from "@/models";
+import { IOrderProducts, IProduct } from "@/models";
 import { Heart, Loader2, Share2, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import SelectQuantity from "./SelectQuantity";
 import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
+import { formatRelativeTime } from "@/lib/utils";
 
 export default function ActionBts({ product }: { product: IProduct }) {
-  const { cart, updateCart, addToCart, deleteCart, addWishlist } = useApp();
+  
+  const { cart } = useAuth();
+  const { updateCart, addToCart, deleteCart, addWishlist, placeOrder } = useApp();
   const [isClient, setIsClient] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
+  const [lastOrder, setLastOrder] = useState<IOrderProducts | null>(product.last_order ? product.last_order : null);
+  const [buyProductLoading, setBuyProductLoading] = useState(false);
+
 
   useEffect(() => {
     setIsClient(true)
   }, []);
   const adddedToCart = cart?.products.find(ele => ele.product_id.toString() == product._id);
 
-  const [quantity, setQuantity] = useState<number>(adddedToCart?.quantity ? adddedToCart?.quantity : 1);
-  const [selectedSize, setSelectedSize] = useState<number | null>(adddedToCart?.size ? adddedToCart?.size : null);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
+
+  useEffect(() => {
+    const theProduct = cart?.products.find(ele => ele.product_id.toString() == product._id)
+    if(theProduct) {
+      setQuantity(theProduct?.quantity);
+      setSelectedSize(theProduct.size);
+    }
+  }, [cart]);
+
 
   const [inWishlist, setInWishList] = useState<boolean>(product.liked);
 
@@ -38,7 +55,35 @@ export default function ActionBts({ product }: { product: IProduct }) {
     }
     setCartLoading(false);
   }
-
+  const onPlaceOrder = async () => {
+    if(!selectedSize) {
+      toast.warning('Select a Size');
+      return;
+    }
+    setBuyProductLoading(true);
+    await placeOrder({
+      discount: product.active_discount.percentage,
+      discount_id: product.active_discount._id,
+      size: selectedSize,
+      original_amt: product.price,
+      final_amount: product.current_price,
+      product_id: product._id,
+      quantity
+    });
+    setLastOrder({
+      discount: product.active_discount.percentage,
+      discount_id: product.active_discount._id,
+      size: selectedSize,
+      original_amt: product.price,
+      final_amount: product.current_price,
+      product_id: product._id,
+      quantity,
+      user_id: "",
+      _id: "",
+      createdAt: new Date(),
+    })
+    setBuyProductLoading(false);
+  }
 
   const onQuantityChange = (value: number) => {
     if (adddedToCart) {
@@ -56,14 +101,14 @@ export default function ActionBts({ product }: { product: IProduct }) {
     }
   }
 
+  
   if (!isClient) return <div className="w-full h-14"></div>;
 
   return (
     <>
       <div>
         <label className="block text-sm font-semibold text-black mb-2">Ring Size</label>
-        {
-          !adddedToCart?.size && <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             {product.available_size.map((size) => (
               <button
                 key={size}
@@ -74,24 +119,14 @@ export default function ActionBts({ product }: { product: IProduct }) {
               </button>
             ))}
           </div>
-        }
-        {
-          adddedToCart?.size && <div className="flex flex-wrap gap-2">
-            {product.available_size.map((size) => (
-              <button
-                key={size}
-                onClick={() => { onSizeChange(size) }}
-                className={`w-10 h-10 ${size == adddedToCart?.size ? 'bg-amber-50 border-amber-500' : ''} rounded-full border-2 border-amber-200 hover:border-amber-500 focus:border-amber-500 focus:outline-none transition-colors duration-300 flex items-center justify-center text-sm font-medium`}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-        }
       </div>
-
-      {!adddedToCart?.quantity && <SelectQuantity onQuantityChange={onQuantityChange} quantity={quantity} />}
-      {adddedToCart?.quantity && <SelectQuantity onQuantityChange={onQuantityChange} quantity={adddedToCart?.quantity} />}
+      <SelectQuantity onQuantityChange={onQuantityChange} quantity={quantity} />
+      
+     {
+        lastOrder &&  <div className="text-black">
+          Last Order of {lastOrder.quantity} pieces of <span className="text-amber-600">size {lastOrder.size}</span> was placed <span className="text-amber-600">{formatRelativeTime(lastOrder.createdAt)}</span>.
+        </div>
+      }
 
       <div className="flex flex-row flex-wrap sm:flex-nowrap items-center gap-4">
         <Button
@@ -106,9 +141,11 @@ export default function ActionBts({ product }: { product: IProduct }) {
         </Button>
         <Button
           size="lg"
+          disabled={buyProductLoading}
+          onClick={()=> { onPlaceOrder() }}
           className="flex-1 bg-gradient-to-r from-gray-800 via-black to-gray-900 hover:from-black hover:via-gray-900 hover:to-black text-white py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
         >
-          Buy Now
+          Buy{buyProductLoading ? 'ing' : ''} Now
         </Button>
         <Button
           variant="outline"

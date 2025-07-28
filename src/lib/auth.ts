@@ -2,10 +2,9 @@ import Cart from '@/models/Cart';
 import * as jwt from 'jsonwebtoken';
 import { Types } from 'mongoose';
 import { cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
 
 export const createToken = (user_id: string) => {
-  return jwt.sign({ user_id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+  return jwt.sign({ user_id }, process.env.JWT_SECRET!, { expiresIn: '2h' });
 };
 
 export const verifyToken = (token: string): { user_id: string } => {

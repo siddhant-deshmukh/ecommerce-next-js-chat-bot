@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { AppProvider } from "@/context/AppContext";
 import { AuthPopup } from "@/components/AuthPopup";
 import { CartPopup } from "@/components/CartPopup";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,17 +38,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased from-white via-orange-50/30 to-amber-50/40`}
       >
-        <AppProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          {/* <ChatInterface /> */}
-          <Toaster position="top-right" richColors />
+        <AuthProvider>
+          <AppProvider>
+            <Navbar />
+            {children}
+            <Footer />
+            {/* <ChatInterface /> */}
+            <Toaster position="top-right" richColors />
 
-          {/* Popups */}
-          <AuthPopup />
-          <CartPopup />
-        </AppProvider>
+            {/* Popups */}
+            <AuthPopup />
+            <CartPopup />
+          </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   );

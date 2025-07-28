@@ -2,9 +2,9 @@
 
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react"
 import { Send, Settings, Shield, Sparkles } from "lucide-react"
-import { post } from "@/lib/apiCallClient";
 import { Spinner } from "@/components/ui/spinner";
 import { IProduct } from "@/models";
+import { useApi } from "@/hooks/useApi";
 
 export default function CustomizationRequest({ product }: { product: IProduct }) {
   const [messages, setMessages] = useState([
@@ -35,6 +35,9 @@ export default function CustomizationRequest({ product }: { product: IProduct })
   const scrollRef = useRef<HTMLDivElement>(null)
   const [inputMessage, setInputMessage] = useState("")
 
+
+  const { post } = useApi();
+  
   const sendMessage = useCallback((message: string) => {
     const newMessage = {
       id: messages.length + 1,
