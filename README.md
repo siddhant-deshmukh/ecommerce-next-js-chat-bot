@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛒 E-Commerce Application
 
-## Getting Started
+A scalable and performant e-commerce platform built for modern deployment using **Next.js** and **Vercel**. Designed with clean architecture, responsive UI, and real-time features.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- ⚡ **Optimized for Vercel**: Fully serverless and production-ready with Next.js API routes and ISR.
+- 🌐 **Next.js 14**: App router, server components, and edge-optimized APIs.
+- 🎨 **Modern UI**: Built with **TailwindCSS** + **shadcn/ui** components.
+- 🧠 **MongoDB**: Scalable document database for user, product, cart, and order management.
+- 📱 **Responsive Design**: Mobile-first and adaptive layout.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📘 Entity-Relationship Diagram
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The following diagram illustrates the data structure for users, products, carts, orders, and related collections:
 
-## Learn More
+![ER Diagram](/er-diagram.png)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📂 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Frontend**: Next.js (App Router), TailwindCSS, Shadcn UI
+- **Backend**: Serverless Functions (API routes)
+- **Database**: MongoDB (via Mongoose)
+- **Hosting**: Vercel (Edge-optimized)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧩 Schemas Covered
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `User`, `Cart`, `Product`, `Discount`, `ProductSpecification`
+- `Wishlist`, `Order`, `OrderProduct`, `Review`
+- `CustomChat`, `RateLimitLog`, `Message`
+
+---
+
+## 📌 Notes
+
+- All relationships are modeled using references or embedded schemas depending on read/write patterns.
+- Wishlist is many-to-many between users and products.
+- Cart contains embedded product snapshots.
+
+--- 
+
+![ER Diagram](/home-page-full-ss.png)
+
+![ER Diagram](/product-page-full-ss.png)
